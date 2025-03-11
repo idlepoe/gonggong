@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "262630422734",
+    "project_id": "seoul-game",
+    "storage_bucket": "seoul-game.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:262630422734:android:e294bb88c4207c8409b89f",
+        "android_client_info": {
+          "package_name": "com.example.gonggong"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsn2HKUBqBqxhXh-icRt-r-MxgQcQbHwQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
