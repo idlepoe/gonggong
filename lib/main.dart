@@ -1,55 +1,57 @@
-import 'package:dio/dio.dart';
+import 'dart:ui';
+import 'dart:ui' as ui;
+
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web_frame/flutter_web_frame.dart';
+
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/bindings_interface.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:gonggong/controllers/api_contoller.dart';
-import 'package:gonggong/pages/splash_page.dart';
-import 'package:logger/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
+import 'app/data/constants/app_translations.dart';
+import 'app/data/constants/theme.dart';
+import 'app/data/controllers/theme_controller.dart';
+import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';
-
-var logger = Logger(printer: PrettyPrinter());
-late final SharedPreferences prefs;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await initializeDateLocale();
+  final themeController = Get.put(ThemeController());
+  await themeController.loadTheme();
 
-  prefs = await SharedPreferences.getInstance();
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+  runApp(
+    FlutterWebFrame(
+      builder: (context) => GetMaterialApp(
+        title: 'ulala'.tr,
+        translations: AppTranslations(),
+        locale: Get.deviceLocale,
+        fallbackLocale: const Locale('en', 'US'),
+        scrollBehavior: const MaterialScrollBehavior().copyWith(
+          dragDevices: {
+            PointerDeviceKind.touch,
+            PointerDeviceKind.mouse,
+            PointerDeviceKind.trackpad,
+          },
+        ),
+        initialRoute: AppPages.INITIAL,
+        getPages: AppPages.routes,
+        debugShowCheckedModeBanner: false,
+        theme: AppThemes.light(),
+        darkTheme: AppThemes.dark(),
+        themeMode: ThemeMode.system, // 또는 light / dark 강제 설정
       ),
-      enableLog: true,
-      logWriterCallback: localLogWriter,
-      initialBinding: InitBinding(),
-      home: SplashPage(),
-    );
-  }
-
-  void localLogWriter(String text, {bool isError = false}) {
-    if (isError) return logger.e(text);
-    logger.d(text);
-  }
+      maximumSize: Size(475.0, 812.0),
+      enabled: kIsWeb,
+      backgroundColor: Colors.grey.shade300,
+    ),
+  );
 }
 
-class InitBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.put(ApiController());
-  }
+Future<void> initializeDateLocale({String? overrideLocale}) async {
+  final deviceLocale =
+      overrideLocale ?? ui.PlatformDispatcher.instance.locale.languageCode;
+  await initializeDateFormatting(deviceLocale);
 }

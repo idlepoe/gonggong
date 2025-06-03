@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -49,21 +52,11 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAaZHFc_pHap2ewQVpC_KbSOg-U8y1dTIg',
-    appId: '1:262630422734:web:88143442a73f527109b89f',
-    messagingSenderId: '262630422734',
-    projectId: 'seoul-game',
-    authDomain: 'seoul-game.firebaseapp.com',
-    storageBucket: 'seoul-game.firebasestorage.app',
-    measurementId: 'G-9Z2GNB8VM2',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDsn2HKUBqBqxhXh-icRt-r-MxgQcQbHwQ',
-    appId: '1:262630422734:android:e294bb88c4207c8409b89f',
-    messagingSenderId: '262630422734',
-    projectId: 'seoul-game',
-    storageBucket: 'seoul-game.firebasestorage.app',
+    apiKey: 'AIzaSyAP7uCR8E9XC4Tx7s7B4l7piPxKDLK2rYY',
+    appId: '1:880975820992:android:d21460c2863f39826e9525',
+    messagingSenderId: '880975820992',
+    projectId: 'gong-nol',
+    storageBucket: 'gong-nol.firebasestorage.app',
   );
 }
