@@ -1,23 +1,37 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-class ChallengeController extends GetxController {
-  //TODO: Implement ChallengeController
+import '../../../data/models/challenge.dart';
+import '../../../data/utils/logger.dart';
 
-  final count = 0.obs;
+class ChallengeController extends GetxController {
+  final RxList<Challenge> challenges = <Challenge>[].obs;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   @override
   void onInit() {
     super.onInit();
+    fetchChallenges();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
+  Future<void> fetchChallenges() async {
+    try {
+      final snapshot = await _firestore
+          .collection("bets")
+          .orderBy("createdAt", descending: true)
+          .get();
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
+      final list = snapshot.docs.map((doc) {
+        return Challenge.fromJson({
+          ...doc.data(),
+          "id": doc.id,
+        });
+      }).toList();
 
-  void increment() => count.value++;
+      challenges.assignAll(list);
+    } catch (e) {
+      logger.e(e);
+      Get.snackbar("Error", "Failed to load challenges");
+    }
+  }
 }

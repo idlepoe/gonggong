@@ -107,36 +107,48 @@ async function fetchWaterData(): Promise<{ docId: string; data: any[] }> {
 
 async function generateChallengeBets(snapshot: { docId: string; data: any[] }) {
     const betCollection = admin.firestore().collection("bets");
-    const betCandidates = [-2.0, -1.5, 1.5, 2.0]; // 수온 변화 조건
+    const betCandidates = [-0.5, -0.3, -0.2, -0.1, +0.1, +0.2, +0.3, +0.5];
+    const targetField = "W_TEMP";
 
     for (const row of snapshot.data) {
         const delta = betCandidates[Math.floor(Math.random() * betCandidates.length)];
         const siteId = row.SITE_ID;
+        const baseValue = parseFloat(row[targetField]);
 
-        const conditionText = delta > 0
-            ? `수온이 ${delta}도 이상 상승할까?`
-            : `수온이 ${Math.abs(delta)}도 이상 하락할까?`;
+        if (isNaN(baseValue)) {
+            logger.warn(`⛔ ${siteId}의 ${targetField} 값이 유효하지 않음`);
+            continue;
+        }
 
-        // 🔍 1. 지난 24시간 수온 변화 이력 조회
-        const deltas = await getLast24hTempChanges(siteId);
-
-        // 🎯 2. 조건 충족 확률 계산
+        const targetValue = parseFloat((baseValue + delta).toFixed(2));
+        const deltas = await getLast24hTempChanges(siteId); // 사용자 정의 함수
         const prob = calculateProbability(deltas, delta);
 
-        // 💰 3. 배당률 계산
-        const odds = parseFloat((1 / Math.max(prob, 0.01)).toFixed(1)); // 최소 1% 확률 보장
+        let odds: number;
 
-        // 🧾 4. 베팅 등록
+        if (prob === 0) {
+            logger.warn(`📛 ${siteId}의 ${delta}℃ 조건은 24시간 내 단 1회도 발생하지 않음 → 기본 배당`);
+            odds = 3.0;
+        } else {
+            odds = parseFloat(Math.min(50, 1 / prob).toFixed(1));
+        }
+
+        const title = delta > 0
+            ? `현재 ${baseValue}℃ → ${targetValue}℃ 이상 상승할까?`
+            : `현재 ${baseValue}℃ → ${targetValue}℃ 이하 하락할까?`;
+
         await betCollection.add({
             siteId,
             snapshotId: snapshot.docId,
-            title: conditionText,
+            title,
             delta,
-            field: "W_TEMP",
+            field: targetField,
+            baseValue,
+            targetValue,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            deadline: new Date(Date.now() + 50 * 60 * 1000), // 50분 뒤 마감
+            deadline: new Date(Date.now() + 50 * 60 * 1000), // 50분 후 마감
             odds,
-            resolved: false,
+            resolved: false
         });
     }
 
@@ -198,7 +210,7 @@ async function resolveBetsUsingSnapshot(docId: string, snapshotData: any[]) {
 
         await betDoc.ref.update({
             resolved: true,
-            result: passed ? "success" : "fail"
+            result: passed
         });
 
         const userBetsSnap = await admin.firestore()

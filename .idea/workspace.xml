@@ -10,71 +10,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0f3d131-9244-4cc6-a4a2-44627efbea21" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/animations/celebrate.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/animations/confetti.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/fonts/BMHANNAPro.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/fonts/BMKkubulimTTF.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/fonts/MapoGoldenPier.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/icon/icon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/broken_image.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/google_logo.webp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/ic_chat.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/ic_fix.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/ic_no_music.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/ic_session_make.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/ic_session_make_grey.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/ic_tab_favorite.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/ic_tab_search.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/ic_tab_track.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/icon-removebg.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/icon-removebg.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/mode_dj.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/mode_general.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/mode_shuffle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/constants/api_constants.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/constants/app_colors.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/constants/app_translations.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/constants/theme.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/controllers/theme_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/utils/api_service.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/utils/app_utils.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/utils/dio.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/utils/dio_interceptor.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/utils/logger.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.firebaserc" beforeDir="false" afterPath="$PROJECT_DIR$/.firebaserc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README_BUILD.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/app/data/models/challenge.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/google-services.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/firebase.json" beforeDir="false" afterPath="$PROJECT_DIR$/firebase.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/.idea/functions.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/functions/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/constrant/define.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/controllers/api_contoller.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/firebase_options.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/firebase_options.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/splash_page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/http.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/linux/flutter/generated_plugins.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/firestore.rules" beforeDir="false" afterPath="$PROJECT_DIR$/firestore.rules" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/functions/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/challenge/controllers/challenge_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/challenge/controllers/challenge_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/challenge/views/challenge_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/challenge/views/challenge_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/bindings/home_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/bindings/home_binding.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/controllers/home_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/controllers/home_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/views/home_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/views/home_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/splash/bindings/splash_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/splash/bindings/splash_binding.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/routes/app_pages.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/routes/app_pages.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/widget_test.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/windows/flutter/generated_plugins.cmake" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,15 +68,17 @@
     "ignore.virus.scanning.warn.message": "true",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Workspace/gonggong/lib",
+    "last_opened_file_path": "C:/Workspace/gonggong",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Workspace\gonggong" />
+      <recent name="C:\Workspace\gonggong\android\app" />
+      <recent name="C:\Workspace\gonggong\android" />
       <recent name="C:\Workspace\gonggong\lib" />
       <recent name="C:\Workspace\gonggong\lib\app\data" />
-      <recent name="C:\Workspace\gonggong" />
     </key>
   </component>
   <component name="RunManager">
