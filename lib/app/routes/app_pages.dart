@@ -33,7 +33,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CHALLENGE,
-      page: () => const ChallengeView(),
+      page: () => ChallengeView(),
       binding: ChallengeBinding(),
     ),
     GetPage(

@@ -5,6 +5,7 @@ import '../../gacha/views/gacha_view.dart';
 import '../../profile/views/profile_view.dart';
 import '../../ranking/views/ranking_view.dart';
 import '../controllers/home_controller.dart';
+import '../widgets/user_profile_badge.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -13,14 +14,20 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Obx(() {
       return Scaffold(
+        appBar: AppBar(
+          title: Obx(() => Text('온라인 접속자 수: ${controller.onlineCount}명')),
+          actions: [
+            UserProfileBadge(),
+          ],
+        ),
         body: PageView(
           controller: controller.pageController,
           physics: const BouncingScrollPhysics(),
-          children: const [
+          children: [
             ChallengeView(),
-            GachaView(),
-            RankingView(),
-            ProfileView(),
+            const GachaView(),
+            const RankingView(),
+            const ProfileView(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
