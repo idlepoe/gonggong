@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/bet.dart';
 import '../../../data/models/measurement_info.dart';
@@ -14,9 +16,13 @@ class BetController extends GetxController {
   final measurementInfos = <String, MeasurementInfo>{}.obs;
   StreamSubscription? _subscription;
 
+  final String kFavoriteMeasurementsKey = 'favorite_measurements';
+  final favorites = <String>{}.obs; // 즐겨찾기 ID 목록
+
   @override
   void onInit() {
     super.onInit();
+    loadFavorites();
     _bindMeasurementStream();
   }
 
@@ -68,6 +74,7 @@ class BetController extends GetxController {
       }
 
       measurementInfos.assignAll(loaded);
+      sortMeasurementInfos();
     });
   }
 
@@ -77,9 +84,57 @@ class BetController extends GetxController {
     super.onClose();
   }
 
+  /// ✅ SharedPreferences에서 즐겨찾기 불러오기
+  Future<void> loadFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final stored = prefs.getStringList(kFavoriteMeasurementsKey) ?? [];
+    favorites.assignAll(stored);
+  }
+
+  /// ✅ 즐겨찾기 여부 확인
+  bool isFavorite(MeasurementInfo info) {
+    final id = "${info.site_id}_${info.type_id}";
+    return favorites.contains(id);
+  }
+
+  /// ✅ 즐겨찾기 토글
+  Future<void> toggleFavorite(MeasurementInfo info) async {
+    final id = "${info.site_id}_${info.type_id}";
+    final prefs = await SharedPreferences.getInstance();
+
+    if (favorites.contains(id)) {
+      favorites.remove(id);
+    } else {
+      favorites.add(id);
+    }
+
+    await prefs.setStringList(kFavoriteMeasurementsKey, favorites.toList());
+    sortMeasurementInfos(); // 우선순위 정렬 반영
+  }
+
+  /// ✅ 우선순위 정렬 (즐겨찾기 먼저)
+  void sortMeasurementInfos() {
+    final entries = measurementInfos.entries.toList();
+
+    entries.sort((a, b) {
+      final isAFav = favorites.contains(a.key);
+      final isBFav = favorites.contains(b.key);
+      if (isAFav && !isBFav) return -1;
+      if (!isAFav && isBFav) return 1;
+      return 0;
+    });
+
+    measurementInfos.assignAll({for (var e in entries) e.key: e.value});
+  }
+
   Future<void> placeBet(Bet bet) async {
     try {
       await ApiService().placeBetWithModel(bet);
+
+      // ✅ topic 구독
+      final topic = "${bet.site_id}_${bet.type_id}_${_resolveBetKey(bet.createdAt)}";
+      await FirebaseMessaging.instance.subscribeToTopic(topic);
+
       Get.snackbar("베팅 완료", "${bet.amount.toInt()}포인트 베팅 성공!");
       // 필요시 포인트 또는 베팅 목록 갱신
     } catch (e) {
@@ -90,6 +145,10 @@ class BetController extends GetxController {
   Future<void> cancelBet(Bet bet) async {
     try {
       await ApiService().cancelBet(bet.uid, bet.site_id, bet.type_id);
+
+      // ✅ topic 구독 해제
+      final topic = "${bet.site_id}_${bet.type_id}_${_resolveBetKey(bet.createdAt)}";
+      await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
 
       final refund = (bet.amount * 0.85).floor();
       final directionLabel = bet.direction == 'up' ? '오를 것' : '내릴 것';
@@ -109,5 +168,12 @@ class BetController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
     }
+  }
+
+  // 🔧 topic key resolver (예: 202506052400)
+  String _resolveBetKey(DateTime dt) {
+    final date = "${dt.year}${dt.month.toString().padLeft(2, '0')}${dt.day.toString().padLeft(2, '0')}";
+    final hour = dt.hour.toString().padLeft(2, '0');
+    return "${date}${hour}00";
   }
 }

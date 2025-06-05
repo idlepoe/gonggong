@@ -248,7 +248,6 @@ export const placeBet = onRequest(async (req, res) => {
     }
 });
 
-
 export async function settleBets({
                                      site_id,
                                      type_id,
@@ -272,8 +271,8 @@ export async function settleBets({
         const userRef = db.collection('users').doc(bet.uid);
 
         const won = bet.direction === (isUp ? 'up' : 'down');
+        const reward = Math.floor(bet.amount * bet.odds);
         if (won) {
-            const reward = Math.floor(bet.amount * bet.odds);
             batch.update(userRef, {
                 points: admin.firestore.FieldValue.increment(reward),
             });
@@ -289,6 +288,22 @@ export async function settleBets({
 
         // 기존 베팅 제거
         batch.delete(doc.ref);
+
+        await admin.messaging().send({
+            topic: `user_${bet.uid}`,
+            notification: {
+                title: "📊 베팅 결과 도착",
+                body: won
+                    ? `축하합니다! ${bet.amount}P → ${reward}P 획득!`
+                    : `아쉽지만 ${bet.amount}P 베팅이 실패했어요. 다음엔 더 좋은 기회가!`,
+            },
+            data: {
+                result: won ? 'win' : 'lose',
+                site_id: site_id,
+                type_id: type_id,
+                amount: bet.amount.toString(),
+            },
+        });
     }
 
     await batch.commit();

@@ -201,10 +201,16 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
               ),
               GestureDetector(
                 onTap: () {
-                  // 즐겨찾기 처리
+                  Get.find<BetController>().toggleFavorite(info);
                 },
-                child: Icon(Icons.bookmark_border,
-                    size: 20, color: Colors.grey.shade600),
+                child: Obx(() {
+                  final isFav = Get.find<BetController>().isFavorite(info);
+                  return Icon(
+                    isFav ? Icons.bookmark : Icons.bookmark_border,
+                    size: 20,
+                    color: isFav ? Colors.orange : Colors.grey.shade600,
+                  );
+                }),
               ),
             ],
           ),
@@ -247,38 +253,38 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
                 },
               ),
             ),
-            const SizedBox(width: 8),
-            Column(
-              children: [
-                SizedBox(
-                  height: 30,
-                  child: ElevatedButton(
-                    onPressed: () => _updateAmount(amount + 1),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      backgroundColor: Colors.grey.shade100,
-                      foregroundColor: Colors.black,
-                      elevation: 0,
-                    ),
-                    child: const Text("+1"),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                SizedBox(
-                  height: 30,
-                  child: ElevatedButton(
-                    onPressed: () => _updateAmount(amount + 10),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      backgroundColor: Colors.grey.shade100,
-                      foregroundColor: Colors.black,
-                      elevation: 0,
-                    ),
-                    child: const Text("+10"),
-                  ),
-                ),
-              ],
-            )
+            // const SizedBox(width: 8),
+            // Column(
+            //   children: [
+            //     SizedBox(
+            //       height: 30,
+            //       child: ElevatedButton(
+            //         onPressed: () => _updateAmount(amount + 1),
+            //         style: ElevatedButton.styleFrom(
+            //           padding: const EdgeInsets.symmetric(horizontal: 12),
+            //           backgroundColor: Colors.grey.shade100,
+            //           foregroundColor: Colors.black,
+            //           elevation: 0,
+            //         ),
+            //         child: const Text("+1"),
+            //       ),
+            //     ),
+            //     const SizedBox(height: 4),
+            //     SizedBox(
+            //       height: 30,
+            //       child: ElevatedButton(
+            //         onPressed: () => _updateAmount(amount + 10),
+            //         style: ElevatedButton.styleFrom(
+            //           padding: const EdgeInsets.symmetric(horizontal: 12),
+            //           backgroundColor: Colors.grey.shade100,
+            //           foregroundColor: Colors.black,
+            //           elevation: 0,
+            //         ),
+            //         child: const Text("+10"),
+            //       ),
+            //     ),
+            //   ],
+            // )
           ],
         ),
         const SizedBox(height: 12),
@@ -295,6 +301,7 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
             max: 100,
             divisions: 99,
             label: "${amount.toStringAsFixed(0)}P",
+            thumbColor: Colors.lightBlue,
             onChanged: _updateAmount,
           ),
         ),
