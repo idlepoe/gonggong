@@ -46,7 +46,8 @@ export async function fetchWaterData(): Promise<void> {
 
     const now = new Date(Date.now() + 9 * 60 * 60 * 1000); // KST
     now.setMinutes(0, 0, 0);
-    const targetHourStr = now.getHours().toString().padStart(2, "0") + ":00";
+    const targetHour = now.getHours();
+    const targetHourStr = targetHour === 0 ? "24:00" : `${targetHour.toString().padStart(2, "0")}:00`;
 
     const filtered = rows.filter(
         (row: any) => row.MSR_TIME === targetHourStr && parseFloat(row.W_TEMP) > 0,
@@ -115,7 +116,7 @@ export async function fetchWaterData(): Promise<void> {
             question,
             interval,
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        }, { merge: true });
+        }, {merge: true});
 
         batch.set(valueRef, {
             name,

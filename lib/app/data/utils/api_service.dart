@@ -36,4 +36,22 @@ class ApiService {
       rethrow;
     }
   }
+
+  Future<dynamic> cancelBet(String uid, String siteId, String typeId) async {
+    try {
+      final res = await dio.post(
+        ApiConstants.placeBet,
+        data: {
+          "uid": uid,
+          "site_id": siteId,
+          "type_id": typeId,
+          "cancel": true, // ❗️cancel 플래그 사용
+        },
+      );
+      return res.data;
+    } catch (e) {
+      logger.e("❌ cancelBet error: $e");
+      rethrow;
+    }
+  }
 }

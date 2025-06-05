@@ -99,40 +99,97 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
             ],
           ),
           const SizedBox(height: 12),
-          // 거래 버튼
-          if (!expanded)
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => toggle(true),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green.shade100,
-                      foregroundColor: Colors.green.shade800,
-                    ),
-                    child: const Text("오를 것 같아"),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => toggle(false),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red.shade100,
-                      foregroundColor: Colors.red.shade800,
-                    ),
-                    child: const Text("내릴 것 같아"),
-                  ),
-                ),
-              ],
-            ),
-          if (expanded) const SizedBox(height: 12),
-          if (expanded)
-            _buildExpandedForm(
-              bettingUp ? Colors.green : Colors.red,
-              bettingUp ? "오를 것 같아" : "내릴 것 같아",
-              (amount * 2.1).toStringAsFixed(0),
-            ),
+
+          /// ✅ 여기에 AnimatedSwitcher 적용
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation) =>
+                SizeTransition(sizeFactor: animation, child: child),
+            child: expanded
+                ? Column(
+                    key: const ValueKey('expanded'),
+                    children: [
+                      const SizedBox(height: 12),
+                      _buildExpandedForm(
+                        bettingUp ? Colors.green : Colors.red,
+                        bettingUp ? "오를 것 같아" : "내릴 것 같아",
+                        (amount * 2.1).toStringAsFixed(0),
+                      ),
+                    ],
+                  )
+                : info.myBet != null
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              "🪙 베팅 금액: ${info.myBet!.amount.toStringAsFixed(0)}P",
+                              style: const TextStyle(fontSize: 14)),
+                          const SizedBox(height: 4),
+                          Text(
+                            "💸 취소 시 반환 금액: ${(info.myBet!.amount * 0.85).floor()}P",
+                            style: TextStyle(
+                                fontSize: 13, color: Colors.grey.shade600),
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Text("📊 예측: "),
+                              Text(
+                                info.myBet!.direction == 'up'
+                                    ? "오를 것 같아"
+                                    : "내릴 것 같아",
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.grey.shade600),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade300,
+                              foregroundColor: Colors.black87,
+                              minimumSize: const Size.fromHeight(48),
+                            ),
+                            onPressed: () async {
+                              final user = FirebaseAuth.instance.currentUser;
+                              if (user == null) return;
+
+                              await Get.find<BetController>()
+                                  .cancelBet(info.myBet!);
+                              collapse(); // 폼 닫기
+                            },
+                            child: const Text("베팅 취소"),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        key: const ValueKey('collapsed'),
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => toggle(true),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green.shade100,
+                                foregroundColor: Colors.green.shade800,
+                              ),
+                              child: const Text("오를 것 같아"),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => toggle(false),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red.shade100,
+                                foregroundColor: Colors.red.shade800,
+                              ),
+                              child: const Text("내릴 것 같아"),
+                            ),
+                          ),
+                        ],
+                      ),
+          ),
+
           const SizedBox(height: 12),
           // 하단 정보
           Row(
@@ -140,7 +197,7 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
             children: [
               IntervalWithTimer(
                 interval: info.interval,
-                endDate: info.values.first.endDate, // 또는 별도로 전달받은 endDate
+                endDate: info.values.first.endDate,
               ),
               GestureDetector(
                 onTap: () {

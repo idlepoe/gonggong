@@ -44,6 +44,7 @@ class BetController extends GetxController {
       // ✅ myBet 추가
       Bet? myBet;
       if (uid != null) {
+        logger.i(uid);
         final betSnap = await FirebaseFirestore.instance
             .collection("bets")
             .doc(parentId)
@@ -76,6 +77,19 @@ class BetController extends GetxController {
       // 필요시 포인트 또는 베팅 목록 갱신
     } catch (e) {
       Get.snackbar("베팅 실패", e.toString());
+    }
+  }
+
+  Future<void> cancelBet(Bet bet) async {
+    try {
+      final res = await ApiService().cancelBet(bet.uid, bet.site_id, bet.type_id);
+      logger.i("🪙 베팅 취소 성공: ${res.data}");
+      Get.snackbar("베팅 취소 완료", res.data.toString(),
+          snackPosition: SnackPosition.BOTTOM);
+    } catch (e) {
+      logger.e("❌ 베팅 취소 실패: $e");
+      Get.snackbar("베팅 취소 실패", "다시 시도해주세요.",
+          snackPosition: SnackPosition.BOTTOM);
     }
   }
 }

@@ -3,4 +3,5 @@ class ApiConstants {
 
   // ✅ 베팅 관련
   static const String placeBet = "/placeBet";
+  static const String cancelBet = "/cancelBet";
 }

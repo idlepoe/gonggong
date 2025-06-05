@@ -12,9 +12,9 @@
     <list default="true" id="e0f3d131-9244-4cc6-a4a2-44627efbea21" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/functions/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/models/measurement_info.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/models/measurement_info.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/models/measurement_info.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/models/measurement_info.freezed.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/models/measurement_info.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/models/measurement_info.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/data/constants/api_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/constants/api_constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/data/models/bet.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/models/bet.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/data/utils/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/utils/api_service.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/controllers/bet_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/controllers/bet_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/widgets/expandable_bet_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/expandable_bet_card.dart" afterDir="false" />
     </list>
