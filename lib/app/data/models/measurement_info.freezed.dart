@@ -23,7 +23,8 @@ mixin _$MeasurementInfo {
   String get unit;
   List<MeasurementValue> get values;
   @JsonKey(fromJson: _toDateTime)
-  DateTime get updatedAt;
+  DateTime get updatedAt; // Firestore timestamp
+  Bet? get myBet;
 
   /// Create a copy of MeasurementInfo
   /// with the given fields replaced by the non-null parameter values.
@@ -52,7 +53,8 @@ mixin _$MeasurementInfo {
             (identical(other.unit, unit) || other.unit == unit) &&
             const DeepCollectionEquality().equals(other.values, values) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            (identical(other.myBet, myBet) || other.myBet == myBet));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -66,11 +68,12 @@ mixin _$MeasurementInfo {
       type_name,
       unit,
       const DeepCollectionEquality().hash(values),
-      updatedAt);
+      updatedAt,
+      myBet);
 
   @override
   String toString() {
-    return 'MeasurementInfo(interval: $interval, question: $question, site_id: $site_id, type_id: $type_id, type_name: $type_name, unit: $unit, values: $values, updatedAt: $updatedAt)';
+    return 'MeasurementInfo(interval: $interval, question: $question, site_id: $site_id, type_id: $type_id, type_name: $type_name, unit: $unit, values: $values, updatedAt: $updatedAt, myBet: $myBet)';
   }
 }
 
@@ -88,7 +91,10 @@ abstract mixin class $MeasurementInfoCopyWith<$Res> {
       String type_name,
       String unit,
       List<MeasurementValue> values,
-      @JsonKey(fromJson: _toDateTime) DateTime updatedAt});
+      @JsonKey(fromJson: _toDateTime) DateTime updatedAt,
+      Bet? myBet});
+
+  $BetCopyWith<$Res>? get myBet;
 }
 
 /// @nodoc
@@ -112,6 +118,7 @@ class _$MeasurementInfoCopyWithImpl<$Res>
     Object? unit = null,
     Object? values = null,
     Object? updatedAt = null,
+    Object? myBet = freezed,
   }) {
     return _then(_self.copyWith(
       interval: null == interval
@@ -146,7 +153,25 @@ class _$MeasurementInfoCopyWithImpl<$Res>
           ? _self.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      myBet: freezed == myBet
+          ? _self.myBet
+          : myBet // ignore: cast_nullable_to_non_nullable
+              as Bet?,
     ));
+  }
+
+  /// Create a copy of MeasurementInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $BetCopyWith<$Res>? get myBet {
+    if (_self.myBet == null) {
+      return null;
+    }
+
+    return $BetCopyWith<$Res>(_self.myBet!, (value) {
+      return _then(_self.copyWith(myBet: value));
+    });
   }
 }
 
@@ -161,7 +186,8 @@ class _MeasurementInfo implements MeasurementInfo {
       required this.type_name,
       required this.unit,
       required final List<MeasurementValue> values,
-      @JsonKey(fromJson: _toDateTime) required this.updatedAt})
+      @JsonKey(fromJson: _toDateTime) required this.updatedAt,
+      this.myBet})
       : _values = values;
   factory _MeasurementInfo.fromJson(Map<String, dynamic> json) =>
       _$MeasurementInfoFromJson(json);
@@ -189,6 +215,9 @@ class _MeasurementInfo implements MeasurementInfo {
   @override
   @JsonKey(fromJson: _toDateTime)
   final DateTime updatedAt;
+// Firestore timestamp
+  @override
+  final Bet? myBet;
 
   /// Create a copy of MeasurementInfo
   /// with the given fields replaced by the non-null parameter values.
@@ -221,7 +250,8 @@ class _MeasurementInfo implements MeasurementInfo {
             (identical(other.unit, unit) || other.unit == unit) &&
             const DeepCollectionEquality().equals(other._values, _values) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            (identical(other.myBet, myBet) || other.myBet == myBet));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -235,11 +265,12 @@ class _MeasurementInfo implements MeasurementInfo {
       type_name,
       unit,
       const DeepCollectionEquality().hash(_values),
-      updatedAt);
+      updatedAt,
+      myBet);
 
   @override
   String toString() {
-    return 'MeasurementInfo(interval: $interval, question: $question, site_id: $site_id, type_id: $type_id, type_name: $type_name, unit: $unit, values: $values, updatedAt: $updatedAt)';
+    return 'MeasurementInfo(interval: $interval, question: $question, site_id: $site_id, type_id: $type_id, type_name: $type_name, unit: $unit, values: $values, updatedAt: $updatedAt, myBet: $myBet)';
   }
 }
 
@@ -259,7 +290,11 @@ abstract mixin class _$MeasurementInfoCopyWith<$Res>
       String type_name,
       String unit,
       List<MeasurementValue> values,
-      @JsonKey(fromJson: _toDateTime) DateTime updatedAt});
+      @JsonKey(fromJson: _toDateTime) DateTime updatedAt,
+      Bet? myBet});
+
+  @override
+  $BetCopyWith<$Res>? get myBet;
 }
 
 /// @nodoc
@@ -283,6 +318,7 @@ class __$MeasurementInfoCopyWithImpl<$Res>
     Object? unit = null,
     Object? values = null,
     Object? updatedAt = null,
+    Object? myBet = freezed,
   }) {
     return _then(_MeasurementInfo(
       interval: null == interval
@@ -317,7 +353,25 @@ class __$MeasurementInfoCopyWithImpl<$Res>
           ? _self.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      myBet: freezed == myBet
+          ? _self.myBet
+          : myBet // ignore: cast_nullable_to_non_nullable
+              as Bet?,
     ));
+  }
+
+  /// Create a copy of MeasurementInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $BetCopyWith<$Res>? get myBet {
+    if (_self.myBet == null) {
+      return null;
+    }
+
+    return $BetCopyWith<$Res>(_self.myBet!, (value) {
+      return _then(_self.copyWith(myBet: value));
+    });
   }
 }
 

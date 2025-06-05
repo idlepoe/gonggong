@@ -10,38 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0f3d131-9244-4cc6-a4a2-44627efbea21" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/images/ic_water_temp.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/functions/src/functions.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/models/bet.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/models/measurement_info.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/models/measurement_value.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/expandable_bet_card.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/interval_with_timer.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/mini_trend_chart.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gonggong.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gonggong.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/functions/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/constants/api_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/constants/api_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/models/challenge.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/models/challenge.freezed.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/models/challenge.g.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/models/water_measurement.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/models/water_measurement.freezed.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/models/water_measurement.g.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/utils/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/utils/api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/utils/app_utils.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/utils/app_utils.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/challenge/bindings/challenge_binding.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/challenge/controllers/challenge_controller.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/challenge/views/challenge_view.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/challenge/widgets/mini_chart.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/challenge/widgets/water_up_down_bet_sheet.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/bindings/home_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/bindings/home_binding.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/views/home_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/views/home_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/splash/controllers/splash_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/splash/controllers/splash_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/routes/app_pages.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/routes/app_pages.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/routes/app_routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/routes/app_routes.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/data/models/measurement_info.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/models/measurement_info.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/data/models/measurement_info.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/models/measurement_info.freezed.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/data/models/measurement_info.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/models/measurement_info.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/controllers/bet_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/controllers/bet_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/widgets/expandable_bet_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/expandable_bet_card.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

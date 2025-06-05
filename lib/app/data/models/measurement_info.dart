@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gonggong/app/data/models/measurement_value.dart';
 
 import '../utils/app_utils.dart';
+import 'bet.dart';
 
 part 'measurement_info.freezed.dart';
 
@@ -37,6 +38,7 @@ abstract class MeasurementInfo with _$MeasurementInfo {
     required List<MeasurementValue> values,
     @JsonKey(fromJson: _toDateTime)
     required DateTime updatedAt, // Firestore timestamp
+    Bet? myBet, // 👈 여기에 포함
   }) = _MeasurementInfo;
 
   factory MeasurementInfo.fromJson(Map<String, dynamic> json) =>

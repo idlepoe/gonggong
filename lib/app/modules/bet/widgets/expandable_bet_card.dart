@@ -59,7 +59,7 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
   @override
   Widget build(BuildContext context) {
     final info = widget.info;
-    final last = info.values.lastOrNull?.value;
+    final last = info.values.firstOrNull?.value;
     final typeName = info.type_name;
     final unit = info.unit;
     final subtitle = "$typeName ${last?.toStringAsFixed(1) ?? '-'}$unit";
@@ -110,7 +110,7 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
                       backgroundColor: Colors.green.shade100,
                       foregroundColor: Colors.green.shade800,
                     ),
-                    child: const Text("Buy Yes ↑"),
+                    child: const Text("오를 것 같아"),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -121,7 +121,7 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
                       backgroundColor: Colors.red.shade100,
                       foregroundColor: Colors.red.shade800,
                     ),
-                    child: const Text("Buy No ↓"),
+                    child: const Text("내릴 것 같아"),
                   ),
                 ),
               ],
@@ -130,7 +130,7 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
           if (expanded)
             _buildExpandedForm(
               bettingUp ? Colors.green : Colors.red,
-              bettingUp ? "Buy Yes ↑" : "Buy No ↓",
+              bettingUp ? "오를 것 같아" : "내릴 것 같아",
               (amount * 2.1).toStringAsFixed(0),
             ),
           const SizedBox(height: 12),
@@ -140,7 +140,7 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
             children: [
               IntervalWithTimer(
                 interval: info.interval,
-                endDate: info.values.last.endDate, // 또는 별도로 전달받은 endDate
+                endDate: info.values.first.endDate, // 또는 별도로 전달받은 endDate
               ),
               GestureDetector(
                 onTap: () {
@@ -237,7 +237,7 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
             min: 1,
             max: 100,
             divisions: 99,
-            label: "\$${amount.toStringAsFixed(0)}",
+            label: "${amount.toStringAsFixed(0)}P",
             onChanged: _updateAmount,
           ),
         ),
@@ -268,7 +268,7 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
             await Get.find<BetController>().placeBet(bet);
             collapse();
           },
-          child: Text("$label\nTo win \$$reward", textAlign: TextAlign.center),
+          child: Text("$label\n예상 수익: $reward\P", textAlign: TextAlign.center),
         ),
       ],
     );

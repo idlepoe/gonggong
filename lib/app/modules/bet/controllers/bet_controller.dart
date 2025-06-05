@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 import '../../../data/models/bet.dart';
@@ -21,6 +22,7 @@ class BetController extends GetxController {
   Future<void> fetchMeasurementInfos() async {
     final firestore = FirebaseFirestore.instance;
     final snapshot = await firestore.collection("measurements").get();
+    final uid = FirebaseAuth.instance.currentUser?.uid;
 
     final Map<String, MeasurementInfo> loaded = {};
 
@@ -28,24 +30,37 @@ class BetController extends GetxController {
       final data = doc.data();
       final parentId = doc.id;
 
-      // 서브컬렉션 values 가져오기
+      // values
       final valuesSnap = await doc.reference
           .collection("values")
           .orderBy("startDate", descending: true)
           .limit(24)
           .get();
-      print(data);
+
       final values = valuesSnap.docs
           .map((v) => MeasurementValue.fromJson(v.data()))
           .toList();
 
-      print(values);
+      // ✅ myBet 추가
+      Bet? myBet;
+      if (uid != null) {
+        final betSnap = await FirebaseFirestore.instance
+            .collection("bets")
+            .doc(parentId)
+            .collection("entries")
+            .doc(uid)
+            .get();
 
+        if (betSnap.exists) {
+          myBet = Bet.fromJson(betSnap.data()!);
+        }
+      }
+
+      // ✅ MeasurementInfo with myBet
       final info = MeasurementInfo.fromJson({
         ...data,
         'values': values.map((v) => v.toJson()).toList(),
-        // 👈 fromJson이 map<String, dynamic>를 받기 때문
-      });
+      }).copyWith(myBet: myBet);
 
       loaded[parentId] = info;
     }

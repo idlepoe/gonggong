@@ -44,10 +44,8 @@ export async function fetchWaterData(): Promise<void> {
     const response = await axios.get(url);
     const rows = response.data?.WPOSInformationTime?.row ?? [];
 
-    // 현재 시간 (KST)
-    const now = new Date(Date.now() + 9 * 60 * 60 * 1000);
+    const now = new Date(Date.now() + 9 * 60 * 60 * 1000); // KST
     now.setMinutes(0, 0, 0);
-
     const targetHourStr = now.getHours().toString().padStart(2, "0") + ":00";
 
     const filtered = rows.filter(
@@ -80,17 +78,35 @@ export async function fetchWaterData(): Promise<void> {
         const startDate = new Date(
             `${row.MSR_DATE.slice(0, 4)}-${row.MSR_DATE.slice(4, 6)}-${row.MSR_DATE.slice(6, 8)}T${row.MSR_TIME}:00+09:00`
         );
-
         const endDate = new Date(startDate.getTime() + 80 * 60 * 1000);
 
         const parentDocId = `${site_id}_${type_id}`;
         const valueDocId = `${row.MSR_DATE}${row.MSR_TIME.replace(":", "")}`;
-
         const question = `한 시간 뒤 ${name}의 수온은 오를까?`;
 
         const parentRef = db.collection("measurements").doc(parentDocId);
         const valueRef = parentRef.collection("values").doc(valueDocId);
 
+        // ✅ 이전 값 가져오기
+        const prevSnap = await parentRef
+            .collection("values")
+            .orderBy("startDate", "desc")
+            .limit(1)
+            .get();
+
+        if (!prevSnap.empty) {
+            const prevValue = prevSnap.docs[0].data().value;
+
+            // ✅ 정산 실행
+            await settleBets({
+                site_id,
+                type_id,
+                previousValue: prevValue,
+                currentValue: value,
+            });
+        }
+
+        // ✅ Firestore 저장
         batch.set(parentRef, {
             site_id,
             type_id,
@@ -99,7 +115,7 @@ export async function fetchWaterData(): Promise<void> {
             question,
             interval,
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        }, {merge: true});
+        }, { merge: true });
 
         batch.set(valueRef, {
             name,
@@ -111,8 +127,9 @@ export async function fetchWaterData(): Promise<void> {
     }
 
     await batch.commit();
-    console.log(`✅ ${filtered.length}개의 수온 데이터 저장 완료 (서브컬렉션 구조 적용됨)`);
+    console.log(`✅ ${filtered.length}개의 수온 데이터 저장 및 정산 완료`);
 }
+
 
 export const placeBet = onRequest(async (req, res) => {
     try {

@@ -18,6 +18,9 @@ _MeasurementInfo _$MeasurementInfoFromJson(Map<String, dynamic> json) =>
           .map((e) => MeasurementValue.fromJson(e as Map<String, dynamic>))
           .toList(),
       updatedAt: _toDateTime(json['updatedAt']),
+      myBet: json['myBet'] == null
+          ? null
+          : Bet.fromJson(json['myBet'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$MeasurementInfoToJson(_MeasurementInfo instance) =>
@@ -30,4 +33,5 @@ Map<String, dynamic> _$MeasurementInfoToJson(_MeasurementInfo instance) =>
       'unit': instance.unit,
       'values': instance.values,
       'updatedAt': instance.updatedAt.toIso8601String(),
+      'myBet': instance.myBet,
     };
