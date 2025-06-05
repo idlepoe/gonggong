@@ -169,11 +169,20 @@ export const placeBet = onRequest(async (req, res) => {
                 const refundAmount = Math.floor(bet.amount * 0.85);
                 const currentPoints = userSnap.data()?.points ?? 0;
 
+                const marketRef = db.collection("measurements").doc(`${site_id}_${type_id}`);
+
+                // 🔹 포인트 환불
                 tx.update(userRef, {
                     points: currentPoints + refundAmount,
                 });
 
+                // 🔹 베팅 삭제
                 tx.delete(betRef);
+
+                // ✅ 🔹 measurements.updatedAt 갱신
+                tx.update(marketRef, {
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                });
             });
 
             res.status(200).send("🪙 베팅 취소 완료 (15% 수수료 제외)");
@@ -224,6 +233,11 @@ export const placeBet = onRequest(async (req, res) => {
                 question,
                 isCancelled: false,
                 createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+
+            // ✅ 🔹 measurements.updatedAt 갱신
+            tx.update(marketRef, {
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
             });
         });
 

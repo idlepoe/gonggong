@@ -16,7 +16,7 @@ class BetView extends GetView<BetController> {
 
         return RefreshIndicator(
           onRefresh: () async {
-            await controller.fetchMeasurementInfos();
+            // await controller.fetchMeasurementInfos();
           },
           child: infos.isEmpty
               ? ListView(

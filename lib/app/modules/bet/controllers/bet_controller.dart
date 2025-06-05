@@ -12,39 +12,41 @@ import '../../../data/utils/logger.dart';
 
 class BetController extends GetxController {
   final measurementInfos = <String, MeasurementInfo>{}.obs;
+  StreamSubscription? _subscription;
 
   @override
   void onInit() {
     super.onInit();
-    fetchMeasurementInfos();
+    _bindMeasurementStream();
   }
 
-  Future<void> fetchMeasurementInfos() async {
-    final firestore = FirebaseFirestore.instance;
-    final snapshot = await firestore.collection("measurements").get();
+  void _bindMeasurementStream() {
     final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
 
-    final Map<String, MeasurementInfo> loaded = {};
+    _subscription = FirebaseFirestore.instance
+        .collection("measurements")
+        .snapshots()
+        .listen((snapshot) async {
+      final Map<String, MeasurementInfo> loaded = {};
 
-    for (final doc in snapshot.docs) {
-      final data = doc.data();
-      final parentId = doc.id;
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final parentId = doc.id;
 
-      // values
-      final valuesSnap = await doc.reference
-          .collection("values")
-          .orderBy("startDate", descending: true)
-          .limit(24)
-          .get();
+        // 🔹 fetch values (서브컬렉션)
+        final valuesSnap = await doc.reference
+            .collection("values")
+            .orderBy("startDate", descending: true)
+            .limit(24)
+            .get();
 
-      final values = valuesSnap.docs
-          .map((v) => MeasurementValue.fromJson(v.data()))
-          .toList();
+        final values = valuesSnap.docs
+            .map((v) => MeasurementValue.fromJson(v.data()))
+            .toList();
 
-      // ✅ myBet 추가
-      Bet? myBet;
-      if (uid != null) {
-        logger.i(uid);
+        // 🔹 fetch myBet
+        Bet? myBet;
         final betSnap = await FirebaseFirestore.instance
             .collection("bets")
             .doc(parentId)
@@ -55,19 +57,24 @@ class BetController extends GetxController {
         if (betSnap.exists) {
           myBet = Bet.fromJson(betSnap.data()!);
         }
+
+        // 🔹 MeasurementInfo 조립
+        final info = MeasurementInfo.fromJson({
+          ...data,
+          'values': values.map((v) => v.toJson()).toList(),
+        }).copyWith(myBet: myBet);
+
+        loaded[parentId] = info;
       }
 
-      // ✅ MeasurementInfo with myBet
-      final info = MeasurementInfo.fromJson({
-        ...data,
-        'values': values.map((v) => v.toJson()).toList(),
-      }).copyWith(myBet: myBet);
+      measurementInfos.assignAll(loaded);
+    });
+  }
 
-      loaded[parentId] = info;
-    }
-
-    measurementInfos.assignAll(loaded);
-    logger.d(loaded);
+  @override
+  void onClose() {
+    _subscription?.cancel();
+    super.onClose();
   }
 
   Future<void> placeBet(Bet bet) async {
@@ -82,14 +89,25 @@ class BetController extends GetxController {
 
   Future<void> cancelBet(Bet bet) async {
     try {
-      final res = await ApiService().cancelBet(bet.uid, bet.site_id, bet.type_id);
-      logger.i("🪙 베팅 취소 성공: ${res.data}");
-      Get.snackbar("베팅 취소 완료", res.data.toString(),
-          snackPosition: SnackPosition.BOTTOM);
+      await ApiService().cancelBet(bet.uid, bet.site_id, bet.type_id);
+
+      final refund = (bet.amount * 0.85).floor();
+      final directionLabel = bet.direction == 'up' ? '오를 것' : '내릴 것';
+
+      logger.i("🪙 ${bet.amount}P 베팅 취소 → ${refund}P 환불");
+
+      Get.snackbar(
+        "베팅 취소 완료",
+        "$directionLabel 에 걸었던 ${bet.amount.toStringAsFixed(0)}P 중\n수수료 제외 ${refund}P가 환불되었습니다.",
+        snackPosition: SnackPosition.BOTTOM,
+      );
     } catch (e) {
       logger.e("❌ 베팅 취소 실패: $e");
-      Get.snackbar("베팅 취소 실패", "다시 시도해주세요.",
-          snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar(
+        "베팅 취소 실패",
+        "다시 시도해주세요.",
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 }
