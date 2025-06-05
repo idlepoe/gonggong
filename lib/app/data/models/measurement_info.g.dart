@@ -1,0 +1,33 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'measurement_info.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_MeasurementInfo _$MeasurementInfoFromJson(Map<String, dynamic> json) =>
+    _MeasurementInfo(
+      interval: json['interval'] as String,
+      question: json['question'] as String,
+      site_id: json['site_id'] as String,
+      type_id: json['type_id'] as String,
+      type_name: json['type_name'] as String,
+      unit: json['unit'] as String,
+      values: (json['values'] as List<dynamic>)
+          .map((e) => MeasurementValue.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      updatedAt: _toDateTime(json['updatedAt']),
+    );
+
+Map<String, dynamic> _$MeasurementInfoToJson(_MeasurementInfo instance) =>
+    <String, dynamic>{
+      'interval': instance.interval,
+      'question': instance.question,
+      'site_id': instance.site_id,
+      'type_id': instance.type_id,
+      'type_name': instance.type_name,
+      'unit': instance.unit,
+      'values': instance.values,
+      'updatedAt': instance.updatedAt.toIso8601String(),
+    };

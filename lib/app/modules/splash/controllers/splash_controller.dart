@@ -39,5 +39,6 @@ class SplashController extends GetxController {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
+    FirebaseAuth.instance.currentUser!.updateDisplayName('신입물고기🐟');
   }
 }

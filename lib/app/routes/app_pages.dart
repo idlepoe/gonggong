@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-import '../modules/challenge/bindings/challenge_binding.dart';
-import '../modules/challenge/views/challenge_view.dart';
+import '../modules/bet/bindings/bet_binding.dart';
+import '../modules/bet/views/bet_view.dart';
 import '../modules/gacha/bindings/gacha_binding.dart';
 import '../modules/gacha/views/gacha_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -32,11 +32,6 @@ class AppPages {
       binding: SplashBinding(),
     ),
     GetPage(
-      name: _Paths.CHALLENGE,
-      page: () => ChallengeView(),
-      binding: ChallengeBinding(),
-    ),
-    GetPage(
       name: _Paths.GACHA,
       page: () => const GachaView(),
       binding: GachaBinding(),
@@ -50,6 +45,11 @@ class AppPages {
       name: _Paths.RANKING,
       page: () => const RankingView(),
       binding: RankingBinding(),
+    ),
+    GetPage(
+      name: _Paths.BET,
+      page: () => BetView(),
+      binding: BetBinding(),
     ),
   ];
 }

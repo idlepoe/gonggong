@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../challenge/views/challenge_view.dart';
+import '../../bet/views/bet_view.dart';
 import '../../gacha/views/gacha_view.dart';
 import '../../profile/views/profile_view.dart';
 import '../../ranking/views/ranking_view.dart';
@@ -24,7 +24,7 @@ class HomeView extends GetView<HomeController> {
           controller: controller.pageController,
           physics: const BouncingScrollPhysics(),
           children: [
-            ChallengeView(),
+            BetView(),
             const GachaView(),
             const RankingView(),
             const ProfileView(),

@@ -10,9 +10,9 @@ setGlobalOptions({region: "asia-northeast3"});
 export const scheduledFetchAndResolveBets = onSchedule("20 * * * *", async () => {
     try {
         // ① 수온 데이터 수집 및 저장
-        const snapshot = await fetchWaterData(); // ✅ docId + data 반환
+        await fetchWaterData(); // ✅ docId + data 반환
 
-        logger.info(`✅ ${snapshot.docId} 기준 베팅 생성 및 평가 완료`);
+        logger.info(`✅ 기준 베팅 생성`);
 
     } catch (e) {
         logger.error("📛 scheduledFetchAndResolveBets 실패", e);
@@ -23,11 +23,9 @@ export const scheduledFetchAndResolveBets = onSchedule("20 * * * *", async () =>
 export const fetchWaterSnapshot = onRequest(async (req, res) => {
     try {
         // ① 수온 데이터 수집 및 저장
-        const snapshot = await fetchWaterData(); // ✅ docId + data 반환
+        await fetchWaterData(); // ✅ docId + data 반환
         res.status(200).json({
             success: true,
-            docId: snapshot.docId,
-            count: snapshot.data.length,
             message: "✅ 수온 데이터 저장 완료",
         });
     } catch (e: any) {
@@ -39,53 +37,228 @@ export const fetchWaterSnapshot = onRequest(async (req, res) => {
     }
 });
 
-async function fetchWaterData(): Promise<{ docId: string; data: any[] }> {
+export async function fetchWaterData(): Promise<void> {
     const API_KEY = "53574b6e7069646c3631646b4a4e53";
     const url = `http://openapi.seoul.go.kr:8088/${API_KEY}/json/WPOSInformationTime/1/10`;
-    const response = await axios.get(url);
 
+    const response = await axios.get(url);
     const rows = response.data?.WPOSInformationTime?.row ?? [];
 
-    // ✅ 한국 시간 기준 Date 객체 생성
-    const now = new Date(Date.now() + 9 * 60 * 60 * 1000); // UTC → KST
-    now.setMinutes(0, 0, 0); // 분/초/밀리초 제거
+    // 현재 시간 (KST)
+    const now = new Date(Date.now() + 9 * 60 * 60 * 1000);
+    now.setMinutes(0, 0, 0);
 
     const targetHourStr = now.getHours().toString().padStart(2, "0") + ":00";
-    const docId =
-        `${now.getFullYear()}` +
-        `${(now.getMonth() + 1).toString().padStart(2, "0")}` +
-        `${now.getDate().toString().padStart(2, "0")}` +
-        `${targetHourStr.slice(0, 2)}00`;
 
-    const filtered = rows.filter((row: { MSR_TIME: string }) => row.MSR_TIME === targetHourStr);
+    const filtered = rows.filter(
+        (row: any) => row.MSR_TIME === targetHourStr && parseFloat(row.W_TEMP) > 0,
+    );
+
     if (filtered.length === 0) throw new Error(`${targetHourStr} 시각의 데이터 없음`);
 
-    // ✅ SITE_ID → 슬러그 변환 테이블
     const siteSlugMap: Record<string, string> = {
         "탄천": "tancheon",
         "중랑천": "jungnang",
         "안양천": "anyang",
         "한강": "hangang",
-        // 필요 시 추가
+        "선유": "sunyu",
     };
 
-    // ✅ 각 data에 challengeId 포함
-    const enrichedData = filtered.map((row: any) => {
-        const siteId = row.SITE_ID;
-        const slug = siteSlugMap[siteId] ?? siteId.replace(/\s+/g, "_").toLowerCase(); // fallback
+    const type_id = "water_temp";
+    const type_name = "수온";
+    const unit = "°C";
+    const interval = "1시간";
 
-        return {
-            ...row,
-            challengeId: `${docId}_${slug}`,
-        };
-    });
+    const db = admin.firestore();
+    const batch = db.batch();
 
-    // ✅ Firestore 저장
-    await admin.firestore().collection("water_snapshots").doc(docId).set({
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        data: enrichedData,
-    });
+    for (const row of filtered) {
+        const name = row.SITE_ID;
+        const site_id = siteSlugMap[name] ?? name.replace(/\s+/g, "_").toLowerCase();
+        const value = parseFloat(row.W_TEMP);
 
-    return {docId, data: enrichedData};
+        const startDate = new Date(
+            `${row.MSR_DATE.slice(0, 4)}-${row.MSR_DATE.slice(4, 6)}-${row.MSR_DATE.slice(6, 8)}T${row.MSR_TIME}:00+09:00`
+        );
+
+        const endDate = new Date(startDate.getTime() + 80 * 60 * 1000);
+
+        const parentDocId = `${site_id}_${type_id}`;
+        const valueDocId = `${row.MSR_DATE}${row.MSR_TIME.replace(":", "")}`;
+
+        const question = `한 시간 뒤 ${name}의 수온은 오를까?`;
+
+        const parentRef = db.collection("measurements").doc(parentDocId);
+        const valueRef = parentRef.collection("values").doc(valueDocId);
+
+        batch.set(parentRef, {
+            site_id,
+            type_id,
+            type_name,
+            unit,
+            question,
+            interval,
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        }, {merge: true});
+
+        batch.set(valueRef, {
+            name,
+            value,
+            startDate,
+            endDate,
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+    }
+
+    await batch.commit();
+    console.log(`✅ ${filtered.length}개의 수온 데이터 저장 완료 (서브컬렉션 구조 적용됨)`);
 }
 
+export const placeBet = onRequest(async (req, res) => {
+    try {
+        const {
+            uid,
+            site_id,
+            type_id,
+            amount,
+            direction, // 'up' or 'down'
+            odds,
+            cancel = false,
+        } = req.body;
+
+        if (!uid || !site_id || !type_id) {
+            res.status(400).send("❌ 필수 파라미터 누락");
+            return;
+        }
+
+        const db = admin.firestore();
+        const userRef = db.collection("users").doc(uid);
+        const betRef = db
+            .collection("bets")
+            .doc(`${site_id}_${type_id}`)
+            .collection("entries")
+            .doc(uid);
+
+        // ✅ 취소 처리
+        if (cancel === true) {
+            await db.runTransaction(async (tx) => {
+                const betSnap = await tx.get(betRef);
+                const userSnap = await tx.get(userRef);
+
+                if (!betSnap.exists) throw new Error("❌ 베팅 정보 없음");
+
+                const bet = betSnap.data()!;
+                const refundAmount = Math.floor(bet.amount * 0.85);
+                const currentPoints = userSnap.data()?.points ?? 0;
+
+                tx.update(userRef, {
+                    points: currentPoints + refundAmount,
+                });
+
+                tx.delete(betRef);
+            });
+
+            res.status(200).send("🪙 베팅 취소 완료 (15% 수수료 제외)");
+            return;
+        }
+
+        // ✅ 유효성 검사
+        if (
+            typeof amount !== "number" ||
+            typeof odds !== "number" ||
+            !["up", "down"].includes(direction)
+        ) {
+            res.status(400).send("❌ 베팅 파라미터 오류");
+            return;
+        }
+
+        await db.runTransaction(async (tx) => {
+            const userSnap = await tx.get(userRef);
+            const currentPoints = userSnap.data()?.points ?? 0;
+
+            if (currentPoints < amount) {
+                throw new Error("❌ 포인트 부족");
+            }
+
+            const userData = userSnap.data();
+            const userName = userData?.name ?? "";
+            const avatarUrl = userData?.avatarUrl ?? "";
+
+            const marketRef = db.collection("measurements").doc(`${site_id}_${type_id}`);
+            const marketSnap = await tx.get(marketRef);
+            const question = marketSnap.data()?.question ?? "";
+
+            // 포인트 차감
+            tx.update(userRef, {
+                points: currentPoints - amount,
+            });
+
+            // 베팅 정보 저장
+            tx.set(betRef, {
+                uid,
+                site_id,
+                type_id,
+                direction,
+                amount,
+                odds,
+                userName,
+                avatarUrl,
+                question,
+                isCancelled: false,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+        });
+
+        res.status(200).send("✅ 베팅 성공");
+    } catch (error: any) {
+        console.error("❌ placeBet 실패:", error);
+        res.status(500).send(`❌ ${error.message}`);
+    }
+});
+
+
+export async function settleBets({
+                                     site_id,
+                                     type_id,
+                                     previousValue,
+                                     currentValue,
+                                 }: {
+    site_id: string;
+    type_id: string;
+    previousValue: number;
+    currentValue: number;
+}) {
+    const db = admin.firestore();
+    const betColl = db.collection('bets').doc(`${site_id}_${type_id}`).collection('entries');
+    const betSnap = await betColl.get();
+
+    const batch = db.batch();
+    const isUp = currentValue > previousValue;
+
+    for (const doc of betSnap.docs) {
+        const bet = doc.data();
+        const userRef = db.collection('users').doc(bet.uid);
+
+        const won = bet.direction === (isUp ? 'up' : 'down');
+        if (won) {
+            const reward = Math.floor(bet.amount * bet.odds);
+            batch.update(userRef, {
+                points: admin.firestore.FieldValue.increment(reward),
+            });
+        }
+
+        // 기록용 백업
+        const historyRef = db.collection('bets_history').doc();
+        batch.set(historyRef, {
+            ...bet,
+            result: won ? 'win' : 'lose',
+            settledAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+
+        // 기존 베팅 제거
+        batch.delete(doc.ref);
+    }
+
+    await batch.commit();
+    console.log(`✅ ${site_id}_${type_id} 베팅 정산 완료 (${isUp ? '상승' : '하락'})`);
+}

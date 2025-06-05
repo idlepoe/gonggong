@@ -11,42 +11,17 @@ import 'package:path_provider/path_provider.dart';
 import 'logger.dart';
 
 class AppUtils {
-  static int convertTime(String duration) {
-    RegExp regex = new RegExp(r'(\d+)');
-    List<String> a =
-    regex.allMatches(duration).map((e) => e.group(0)!).toList();
-
-    if (duration.indexOf('M') >= 0 &&
-        duration.indexOf('H') == -1 &&
-        duration.indexOf('S') == -1) {
-      a = ["0", a[0], "0"];
+  static DateTime parseCompactDateTime(String compact) {
+    if (compact.length != 12) {
+      throw FormatException('Expected date string of length 12, got ${compact.length}');
     }
 
-    if (duration.indexOf('H') >= 0 && duration.indexOf('M') == -1) {
-      a = [a[0], "0", a[1]];
-    }
-    if (duration.indexOf('H') >= 0 &&
-        duration.indexOf('M') == -1 &&
-        duration.indexOf('S') == -1) {
-      a = [a[0], "0", "0"];
-    }
+    final year = int.parse(compact.substring(0, 4));
+    final month = int.parse(compact.substring(4, 6));
+    final day = int.parse(compact.substring(6, 8));
+    final hour = int.parse(compact.substring(8, 10));
+    final minute = int.parse(compact.substring(10, 12));
 
-    int seconds = 0;
-
-    if (a.length == 3) {
-      seconds = seconds + int.parse(a[0]) * 3600;
-      seconds = seconds + int.parse(a[1]) * 60;
-      seconds = seconds + int.parse(a[2]);
-    }
-
-    if (a.length == 2) {
-      seconds = seconds + int.parse(a[0]) * 60;
-      seconds = seconds + int.parse(a[1]);
-    }
-
-    if (a.length == 1) {
-      seconds = seconds + int.parse(a[0]);
-    }
-    return seconds;
+    return DateTime(year, month, day, hour, minute);
   }
 }
