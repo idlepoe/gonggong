@@ -19,6 +19,8 @@ class BetController extends GetxController {
   final String kFavoriteMeasurementsKey = 'favorite_measurements';
   final favorites = <String>{}.obs; // 즐겨찾기 ID 목록
 
+  final isLoading = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -129,25 +131,35 @@ class BetController extends GetxController {
 
   Future<void> placeBet(Bet bet) async {
     try {
+      if (isLoading.value) return; // 중복 클릭 방지
+      isLoading.value = true;
+
       await ApiService().placeBetWithModel(bet);
 
       // ✅ topic 구독
-      final topic = "${bet.site_id}_${bet.type_id}_${_resolveBetKey(bet.createdAt)}";
+      final topic =
+          "${bet.site_id}_${bet.type_id}_${_resolveBetKey(bet.createdAt)}";
       await FirebaseMessaging.instance.subscribeToTopic(topic);
 
       Get.snackbar("베팅 완료", "${bet.amount.toInt()}포인트 베팅 성공!");
       // 필요시 포인트 또는 베팅 목록 갱신
     } catch (e) {
       Get.snackbar("베팅 실패", e.toString());
+    } finally {
+      isLoading.value = false;
     }
   }
 
   Future<void> cancelBet(Bet bet) async {
     try {
+      if (isLoading.value) return; // 중복 클릭 방지
+      isLoading.value = true;
+
       await ApiService().cancelBet(bet.uid, bet.site_id, bet.type_id);
 
       // ✅ topic 구독 해제
-      final topic = "${bet.site_id}_${bet.type_id}_${_resolveBetKey(bet.createdAt)}";
+      final topic =
+          "${bet.site_id}_${bet.type_id}_${_resolveBetKey(bet.createdAt)}";
       await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
 
       final refund = (bet.amount * 0.85).floor();
@@ -167,12 +179,15 @@ class BetController extends GetxController {
         "다시 시도해주세요.",
         snackPosition: SnackPosition.BOTTOM,
       );
+    } finally {
+      isLoading.value = false;
     }
   }
 
   // 🔧 topic key resolver (예: 202506052400)
   String _resolveBetKey(DateTime dt) {
-    final date = "${dt.year}${dt.month.toString().padLeft(2, '0')}${dt.day.toString().padLeft(2, '0')}";
+    final date =
+        "${dt.year}${dt.month.toString().padLeft(2, '0')}${dt.day.toString().padLeft(2, '0')}";
     final hour = dt.hour.toString().padLeft(2, '0');
     return "${date}${hour}00";
   }

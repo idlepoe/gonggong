@@ -32,6 +32,7 @@ abstract class MeasurementInfo with _$MeasurementInfo {
     required String interval,
     required String question,
     required String site_id,
+    required String site_name,
     required String type_id,
     required String type_name,
     required String unit,

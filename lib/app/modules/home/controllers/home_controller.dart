@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:flutter/material.dart';
-
 
 class HomeController extends GetxController {
   final pageController = PageController();
@@ -13,9 +13,9 @@ class HomeController extends GetxController {
 
   final FirebaseDatabase database = FirebaseDatabase.instanceFor(
     app: Firebase.app(),
-    databaseURL: "https://gong-nol-default-rtdb.asia-southeast1.firebasedatabase.app",
+    databaseURL:
+        "https://gong-nol-default-rtdb.asia-southeast1.firebasedatabase.app",
   );
-
 
   void changePage(int index) {
     currentIndex.value = index;
@@ -28,6 +28,7 @@ class HomeController extends GetxController {
     registerOnlineStatus().then(
       (value) {
         listenToOnlineUsers();
+        requestPushPermissionIfNeeded();
       },
     );
   }
@@ -54,5 +55,18 @@ class HomeController extends GetxController {
       final data = event.snapshot.value as Map?;
       onlineCount.value = data?.length ?? 0;
     });
+  }
+
+  Future<void> requestPushPermissionIfNeeded() async {
+    if (await Permission.notification.isDenied) {
+      final status = await Permission.notification.request();
+      if (status.isGranted) {
+        print('✅ 푸시 알림 권한 허용됨');
+      } else {
+        print('❌ 푸시 알림 권한 거부됨');
+      }
+    } else {
+      print('✅ 이미 푸시 알림 권한 있음');
+    }
   }
 }

@@ -18,6 +18,7 @@ mixin _$MeasurementInfo {
   String get interval;
   String get question;
   String get site_id;
+  String get site_name;
   String get type_id;
   String get type_name;
   String get unit;
@@ -47,6 +48,8 @@ mixin _$MeasurementInfo {
             (identical(other.question, question) ||
                 other.question == question) &&
             (identical(other.site_id, site_id) || other.site_id == site_id) &&
+            (identical(other.site_name, site_name) ||
+                other.site_name == site_name) &&
             (identical(other.type_id, type_id) || other.type_id == type_id) &&
             (identical(other.type_name, type_name) ||
                 other.type_name == type_name) &&
@@ -64,6 +67,7 @@ mixin _$MeasurementInfo {
       interval,
       question,
       site_id,
+      site_name,
       type_id,
       type_name,
       unit,
@@ -73,7 +77,7 @@ mixin _$MeasurementInfo {
 
   @override
   String toString() {
-    return 'MeasurementInfo(interval: $interval, question: $question, site_id: $site_id, type_id: $type_id, type_name: $type_name, unit: $unit, values: $values, updatedAt: $updatedAt, myBet: $myBet)';
+    return 'MeasurementInfo(interval: $interval, question: $question, site_id: $site_id, site_name: $site_name, type_id: $type_id, type_name: $type_name, unit: $unit, values: $values, updatedAt: $updatedAt, myBet: $myBet)';
   }
 }
 
@@ -87,6 +91,7 @@ abstract mixin class $MeasurementInfoCopyWith<$Res> {
       {String interval,
       String question,
       String site_id,
+      String site_name,
       String type_id,
       String type_name,
       String unit,
@@ -113,6 +118,7 @@ class _$MeasurementInfoCopyWithImpl<$Res>
     Object? interval = null,
     Object? question = null,
     Object? site_id = null,
+    Object? site_name = null,
     Object? type_id = null,
     Object? type_name = null,
     Object? unit = null,
@@ -132,6 +138,10 @@ class _$MeasurementInfoCopyWithImpl<$Res>
       site_id: null == site_id
           ? _self.site_id
           : site_id // ignore: cast_nullable_to_non_nullable
+              as String,
+      site_name: null == site_name
+          ? _self.site_name
+          : site_name // ignore: cast_nullable_to_non_nullable
               as String,
       type_id: null == type_id
           ? _self.type_id
@@ -182,6 +192,7 @@ class _MeasurementInfo implements MeasurementInfo {
       {required this.interval,
       required this.question,
       required this.site_id,
+      required this.site_name,
       required this.type_id,
       required this.type_name,
       required this.unit,
@@ -198,6 +209,8 @@ class _MeasurementInfo implements MeasurementInfo {
   final String question;
   @override
   final String site_id;
+  @override
+  final String site_name;
   @override
   final String type_id;
   @override
@@ -244,6 +257,8 @@ class _MeasurementInfo implements MeasurementInfo {
             (identical(other.question, question) ||
                 other.question == question) &&
             (identical(other.site_id, site_id) || other.site_id == site_id) &&
+            (identical(other.site_name, site_name) ||
+                other.site_name == site_name) &&
             (identical(other.type_id, type_id) || other.type_id == type_id) &&
             (identical(other.type_name, type_name) ||
                 other.type_name == type_name) &&
@@ -261,6 +276,7 @@ class _MeasurementInfo implements MeasurementInfo {
       interval,
       question,
       site_id,
+      site_name,
       type_id,
       type_name,
       unit,
@@ -270,7 +286,7 @@ class _MeasurementInfo implements MeasurementInfo {
 
   @override
   String toString() {
-    return 'MeasurementInfo(interval: $interval, question: $question, site_id: $site_id, type_id: $type_id, type_name: $type_name, unit: $unit, values: $values, updatedAt: $updatedAt, myBet: $myBet)';
+    return 'MeasurementInfo(interval: $interval, question: $question, site_id: $site_id, site_name: $site_name, type_id: $type_id, type_name: $type_name, unit: $unit, values: $values, updatedAt: $updatedAt, myBet: $myBet)';
   }
 }
 
@@ -286,6 +302,7 @@ abstract mixin class _$MeasurementInfoCopyWith<$Res>
       {String interval,
       String question,
       String site_id,
+      String site_name,
       String type_id,
       String type_name,
       String unit,
@@ -313,6 +330,7 @@ class __$MeasurementInfoCopyWithImpl<$Res>
     Object? interval = null,
     Object? question = null,
     Object? site_id = null,
+    Object? site_name = null,
     Object? type_id = null,
     Object? type_name = null,
     Object? unit = null,
@@ -332,6 +350,10 @@ class __$MeasurementInfoCopyWithImpl<$Res>
       site_id: null == site_id
           ? _self.site_id
           : site_id // ignore: cast_nullable_to_non_nullable
+              as String,
+      site_name: null == site_name
+          ? _self.site_name
+          : site_name // ignore: cast_nullable_to_non_nullable
               as String,
       type_id: null == type_id
           ? _self.type_id

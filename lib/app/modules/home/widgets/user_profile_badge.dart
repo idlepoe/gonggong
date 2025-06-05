@@ -1,10 +1,72 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 
-class UserProfileBadge extends StatelessWidget {
+class UserProfileBadge extends StatefulWidget {
   const UserProfileBadge({super.key});
+
+  @override
+  State<UserProfileBadge> createState() => _UserProfileBadgeState();
+}
+
+class _UserProfileBadgeState extends State<UserProfileBadge> {
+  Timer? _pointTimer;
+  int? _currentPoints;
+
+  @override
+  void dispose() {
+    _pointTimer?.cancel();
+    super.dispose();
+  }
+
+  void _handlePointUpdate(String uid, int points) {
+    _currentPoints = points;
+
+    // 이미 100 이상이면 타이머 종료
+    if (points >= 100) {
+      _pointTimer?.cancel();
+      _pointTimer = null;
+      return;
+    }
+
+    // 이미 타이머 작동 중이면 건너뜀
+    if (_pointTimer != null && _pointTimer!.isActive) return;
+
+    // 타이머 시작 (10분마다 +20P)
+    _pointTimer = Timer.periodic(const Duration(minutes: 10), (_) async {
+      if (_currentPoints != null && _currentPoints! < 100) {
+        final newPoints = _currentPoints! + 20;
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .update({'points': newPoints});
+        _currentPoints = newPoints;
+
+        // ✅ 하단 알림 추가
+        Get.snackbar(
+          '💰 포인트 지급',
+          '10분 접속 보상으로 20포인트가 지급되었어요!',
+          icon: const Icon(Icons.card_giftcard, color: Colors.amber),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.black87,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(12),
+          duration: const Duration(seconds: 3),
+        );
+
+        if (newPoints >= 100) {
+          _pointTimer?.cancel();
+          _pointTimer = null;
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +87,14 @@ class UserProfileBadge extends StatelessWidget {
         final nickname = data['nickname'] as String? ?? '이름 없음';
         final points = data['points'] as int? ?? 0;
 
+        // 포인트 업데이트 처리
+        _handlePointUpdate(uid, points);
+
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // ✅ 아바타 이미지
               CircleAvatar(
                 backgroundImage:
                     avatarUrl.isNotEmpty ? NetworkImage(avatarUrl) : null,
@@ -40,8 +104,6 @@ class UserProfileBadge extends StatelessWidget {
                     : null,
               ),
               const SizedBox(width: 8),
-
-              // ✅ 닉네임 + 포인트
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,

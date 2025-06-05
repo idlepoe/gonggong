@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../data/utils/logger.dart';
 import '../../bet/views/bet_view.dart';
 import '../../gacha/views/gacha_view.dart';
 import '../../profile/views/profile_view.dart';
@@ -15,7 +18,14 @@ class HomeView extends GetView<HomeController> {
     return Obx(() {
       return Scaffold(
         appBar: AppBar(
-          title: Obx(() => Text('온라인 접속자 수: ${controller.onlineCount}명')),
+          title: Obx(() => InkWell(
+              onTap: () async {
+                await FirebaseMessaging.instance.subscribeToTopic(
+                    'user_${FirebaseAuth.instance.currentUser!.uid}');
+
+                logger.d(await FirebaseMessaging.instance.getToken());
+              },
+              child: Text('온라인 접속자 수: ${controller.onlineCount}명'))),
           actions: [
             UserProfileBadge(),
           ],

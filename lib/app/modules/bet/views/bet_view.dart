@@ -14,36 +14,33 @@ class BetView extends GetView<BetController> {
       body: Obx(() {
         final infos = controller.measurementInfos.values.toList();
 
-        return RefreshIndicator(
-          onRefresh: () async {
-            // await controller.fetchMeasurementInfos();
-          },
-          child: infos.isEmpty
-              ? ListView(
-                  // RefreshIndicator는 반드시 스크롤 가능 위젯이 필요
-                  children: [
-                    SizedBox(
-                        height: 300,
-                        child: Center(child: CircularProgressIndicator())),
-                  ],
-                )
-              : ListView.builder(
-            padding: const EdgeInsets.only(bottom: 20),
-            itemCount: infos.length,
-            itemBuilder: (context, index) {
-              final info = infos[index];
-              if (info.values.length < 2) return const SizedBox.shrink();
+        return infos.isEmpty
+            ? ListView(
+                // RefreshIndicator는 반드시 스크롤 가능 위젯이 필요
+                children: [
+                  SizedBox(
+                      height: 300,
+                      child: Center(child: CircularProgressIndicator())),
+                ],
+              )
+            : ListView.builder(
+                padding: const EdgeInsets.only(bottom: 20),
+                itemCount: infos.length,
+                itemBuilder: (context, index) {
+                  final info = infos[index];
+                  if (info.values.length < 2) return const SizedBox.shrink();
 
-              final recent = info.values[0].value;
-              final previous = info.values[1].value;
-              final probability = ((recent - previous).clamp(-5, 5) / 10 + 0.5).clamp(0.0, 1.0);
+                  final recent = info.values[0].value;
+                  final previous = info.values[1].value;
+                  final probability =
+                      ((recent - previous).clamp(-5, 5) / 10 + 0.5)
+                          .clamp(0.0, 1.0);
 
-              return ExpandableBetCard(
-                info: info,
+                  return ExpandableBetCard(
+                    info: info,
+                  );
+                },
               );
-            },
-          ),
-        );
       }),
     );
   }

@@ -11,9 +11,6 @@ export const scheduledFetchAndResolveBets = onSchedule("20 * * * *", async () =>
     try {
         // ① 수온 데이터 수집 및 저장
         await fetchWaterData(); // ✅ docId + data 반환
-
-        logger.info(`✅ 기준 베팅 생성`);
-
     } catch (e) {
         logger.error("📛 scheduledFetchAndResolveBets 실패", e);
     }
@@ -110,6 +107,7 @@ export async function fetchWaterData(): Promise<void> {
         // ✅ Firestore 저장
         batch.set(parentRef, {
             site_id,
+            site_name: name,
             type_id,
             type_name,
             unit,
@@ -289,21 +287,29 @@ export async function settleBets({
         // 기존 베팅 제거
         batch.delete(doc.ref);
 
-        await admin.messaging().send({
-            topic: `user_${bet.uid}`,
-            notification: {
-                title: "📊 베팅 결과 도착",
-                body: won
-                    ? `축하합니다! ${bet.amount}P → ${reward}P 획득!`
-                    : `아쉽지만 ${bet.amount}P 베팅이 실패했어요. 다음엔 더 좋은 기회가!`,
-            },
-            data: {
-                result: won ? 'win' : 'lose',
-                site_id: site_id,
-                type_id: type_id,
-                amount: bet.amount.toString(),
-            },
-        });
+        // ✅ 알림 전송 (try/catch 추가)
+        try {
+            await admin.messaging().send({
+                topic: `user_${bet.uid}`,
+                notification: {
+                    title: `📊 ${bet.question}`, // 예: "한 시간 뒤 안양천의 수온은 오를까?"
+                    body: won
+                        ? `🎉 정답! ${bet.amount}P → ${reward}P 획득!`
+                        : `😢 틀렸어요... ${bet.amount}P 베팅 실패`,
+                },
+                data: {
+                    result: won ? 'win' : 'lose',
+                    site_id: site_id,
+                    type_id: type_id,
+                    amount: bet.amount.toString(),
+                },
+            });
+        } catch (error) {
+            console.error(
+                `❗️푸시 전송 실패 (uid: ${bet.uid}):`,
+                (error as Error).message
+            );
+        }
     }
 
     await batch.commit();
