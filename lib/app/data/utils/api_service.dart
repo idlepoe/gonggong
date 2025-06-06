@@ -60,7 +60,6 @@ class ApiService {
       final res = await dio.post(
         ApiConstants.purchaseRandomArtwork,
       );
-
       return res.data;
     } catch (e) {
       logger.e("❌ purchaseRandomArtwork error: $e");

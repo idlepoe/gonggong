@@ -312,25 +312,32 @@ export async function settleBets({
     await batch.commit();
     console.log(`✅ ${site_id}_${type_id} 베팅 정산 완료 (${isUp ? '상승' : '하락'})`);
 
-    // ✅ 사용자별 푸시 메시지 전송
     for (const [uid, resultLines] of Object.entries(resultsByUser)) {
         try {
+            // 최대 길이 제한 고려
+            let bodyLines: string[] = [];
+            let currentLength = 0;
+            const MAX_BODY_LENGTH = 230; // 최대 바이트 제한 고려 (디바이스별 다름)
+
+            for (const line of resultLines) {
+                const newLength = currentLength + line.length + 1; // +1 for 줄바꿈
+                if (newLength > MAX_BODY_LENGTH) break;
+                bodyLines.push(line);
+                currentLength = newLength;
+            }
+
+            const hasMore = bodyLines.length < resultLines.length;
+
             await admin.messaging().send({
                 topic: `user_${uid}`,
                 notification: {
                     title: '📊 베팅 결과가 도착했어요!',
-                    body: `총 ${resultLines.length}건의 결과를 확인해보세요.`,
-                },
-                data: {
-                    resultLines: resultLines.join('\n'),  // 최대 길이 고려
-                    site_id,
-                    type_id,
-                    resultCount: resultLines.length.toString(),
+                    body: bodyLines.join('\n') + (hasMore ? '\n외 결과 더 있음...' : ''),
                 },
             });
 
             console.log(
-                `📬 푸시 전송 완료 → uid: ${uid}, 총 ${resultLines.length}건 요약 발송`
+                `📬 푸시 전송 완료 → uid: ${uid}, 총 ${resultLines.length}건`
             );
         } catch (error) {
             console.error(

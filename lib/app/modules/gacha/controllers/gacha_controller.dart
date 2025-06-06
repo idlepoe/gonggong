@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/artwork_model.dart';
 import '../../../data/utils/api_service.dart';
@@ -11,70 +14,70 @@ class GachaController extends GetxController {
   final ownedIds = <String>{}.obs;
 
   final isLoading = false.obs;
-  final hasMore = true.obs;
 
-  DocumentSnapshot? lastDoc;
+  static const _cacheKey = 'cached_artworks';
+  static const _cacheTimeKey = 'artworks_last_updated';
 
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
 
-  static const int pageSize = 20;
-
   @override
   void onInit() {
     super.onInit();
-    fetchArtworks();
+    fetchInitialData();
   }
 
   Future<void> fetchInitialData() async {
     await Future.wait([
-      fetchArtworks(reset: true),
+      loadArtworksFromLocalOrServer(),
       fetchOwnedIds(),
     ]);
   }
 
-  /// Firestore에서 아트워크 페이징 로드
-  Future<void> fetchArtworks({bool reset = false}) async {
-    if (isLoading.value || !hasMore.value) return;
+  final showUnowned = false.obs;
 
+  List<Artwork> get filteredArtworks {
+    if (showUnowned.value) return artworks;
+    return artworks.where((a) => isOwned(a.id)).toList();
+  }
+
+  Future<void> loadArtworksFromLocalOrServer() async {
     isLoading.value = true;
-
     try {
-      Query query = _firestore
-          .collection('artworks')
-          .orderBy('mnfct_year', descending: true)
-          .limit(pageSize);
+      final prefs = await SharedPreferences.getInstance();
+      final now = DateTime.now();
+      final lastUpdatedStr = prefs.getString(_cacheTimeKey);
+      final lastUpdated =
+          lastUpdatedStr != null ? DateTime.tryParse(lastUpdatedStr) : null;
 
-      if (!reset && lastDoc != null) {
-        query = query.startAfterDocument(lastDoc!);
-      }
-
-      final snapshot = await query.get();
-      final docs = snapshot.docs;
-
-      if (reset) {
-        artworks.clear();
-        lastDoc = null;
-        hasMore.value = true;
-      }
-
-      if (docs.isNotEmpty) {
-        final newArtworks = docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          return Artwork.fromJson({...data, 'id': doc.id});
-        }).toList();
-
-        artworks.addAll(newArtworks);
-        lastDoc = docs.last;
-
-        if (docs.length < pageSize) {
-          hasMore.value = false;
+      // ✅ 7일 이내 캐시가 있다면 로컬 데이터 사용
+      if (lastUpdated != null &&
+          now.difference(lastUpdated) < const Duration(days: 7)) {
+        final cachedJson = prefs.getString(_cacheKey);
+        if (cachedJson != null) {
+          final List decoded = json.decode(cachedJson);
+          artworks.assignAll(decoded.map((e) => Artwork.fromJson(e)).toList());
+          return;
         }
-      } else {
-        hasMore.value = false;
       }
+
+      // ✅ 서버에서 전체 로딩
+      final snapshot =
+          await FirebaseFirestore.instance.collection('artworks').get();
+
+      final newList = snapshot.docs.map((doc) {
+        final data = doc.data();
+        return Artwork.fromJson({...data, 'id': doc.id});
+      }).toList();
+
+      artworks.assignAll(newList);
+
+      // ✅ SharedPreferences에 저장
+      await prefs.setString(
+          _cacheKey, json.encode(newList.map((e) => e.toJson()).toList()));
+      await prefs.setString(_cacheTimeKey, now.toIso8601String());
     } catch (e) {
-      print("🔥 Error fetching artworks: $e");
+      print('🔥 Error loading artworks: $e');
     } finally {
       isLoading.value = false;
     }
@@ -103,17 +106,17 @@ class GachaController extends GetxController {
 
   bool isOwned(String id) => ownedIds.contains(id);
 
-  void fetchMoreArtworks() => fetchArtworks();
-
   Future<void> drawGacha() async {
     isLoading.value = true;
     try {
       final newArtwork = await ApiService().purchaseRandomArtwork();
       if (newArtwork != null) {
-        ownedIds.add(newArtwork.id);
-        Get.snackbar('🎁 가챠 결과', '${newArtwork.prdctNmKorean} 획득!');
+        logger.w(newArtwork);
+        ownedIds.add(newArtwork["artworkId"]);
+        Get.snackbar('🎁 가챠 결과', '${newArtwork["artwork"]["prdct_nm_korean"]} 획득!');
       }
     } catch (e) {
+      logger.e(e);
       Get.snackbar('실패', '가챠 중 오류 발생');
     } finally {
       isLoading.value = false;

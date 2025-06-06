@@ -8,8 +8,10 @@ class AppThemes {
       scaffoldBackgroundColor: AppColors.backgroundColor,
       fontFamily: 'MapoGoldenPier',
       colorScheme: ColorScheme.light(
-        primary: AppColors.vividLavender,
-        secondary: AppColors.deepLavender,
+        primary: AppColors.accentGreen,
+        // 상승 강조색
+        secondary: AppColors.accentRed,
+        // 하락 강조색
         surface: AppColors.cardBackground,
         background: AppColors.backgroundColor,
         onPrimary: Colors.white,
@@ -27,11 +29,11 @@ class AppThemes {
         iconTheme: const IconThemeData(color: Colors.black87),
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: AppColors.softChipColor,
+        backgroundColor: AppColors.chipColor,
         labelStyle: const TextStyle(fontSize: 12, color: Colors.black87),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        selectedColor: AppColors.vividLavender.withOpacity(0.8),
-        secondarySelectedColor: AppColors.vividLavender,
+        selectedColor: AppColors.accentGreen.withOpacity(0.8),
+        secondarySelectedColor: AppColors.accentRed.withOpacity(0.8),
       ),
       cardColor: AppColors.cardBackground,
       cardTheme: const CardTheme(
@@ -42,13 +44,13 @@ class AppThemes {
         ),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: AppColors.mascotHairColor,
-        foregroundColor: AppColors.deepLavender,
+        backgroundColor: AppColors.accentGreen,
+        foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.cardBackground,
-        selectedItemColor: AppColors.vividLavender,
+        selectedItemColor: AppColors.accentGreen,
         unselectedItemColor: AppColors.textSecondary,
         type: BottomNavigationBarType.fixed,
       ),
@@ -59,14 +61,15 @@ class AppThemes {
       ),
     );
   }
+
   static ThemeData dark() {
     return ThemeData(
       brightness: Brightness.dark,
       scaffoldBackgroundColor: AppColors.darkBackgroundColor,
       fontFamily: 'MapoGoldenPier',
       colorScheme: ColorScheme.dark(
-        primary: AppColors.vividLavender,
-        secondary: AppColors.deepLavender,
+        primary: AppColors.accentGreen,
+        secondary: AppColors.accentRed,
         surface: AppColors.darkCardBackground,
         background: AppColors.darkBackgroundColor,
         onPrimary: Colors.black,
@@ -87,8 +90,8 @@ class AppThemes {
         backgroundColor: AppColors.darkChipColor,
         labelStyle: const TextStyle(fontSize: 12, color: Colors.white),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        selectedColor: AppColors.vividLavender.withOpacity(0.8),
-        secondarySelectedColor: AppColors.vividLavender,
+        selectedColor: AppColors.accentGreen.withOpacity(0.8),
+        secondarySelectedColor: AppColors.accentRed.withOpacity(0.8),
       ),
       cardColor: AppColors.darkCardBackground,
       cardTheme: const CardTheme(
@@ -99,14 +102,14 @@ class AppThemes {
         ),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: AppColors.mascotHairColor,
-        foregroundColor: Colors.black,
+        backgroundColor: AppColors.accentGreen,
+        foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: AppColors.darkCardBackground,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: AppColors.vividLavender.withOpacity(0.6),
+        selectedItemColor: AppColors.accentGreen,
+        unselectedItemColor: AppColors.darkTextSecondary,
         type: BottomNavigationBarType.fixed,
       ),
       textTheme: const TextTheme(
@@ -116,6 +119,4 @@ class AppThemes {
       ),
     );
   }
-
-
 }
