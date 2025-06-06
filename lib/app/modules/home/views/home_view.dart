@@ -48,8 +48,8 @@ class HomeView extends GetView<HomeController> {
           unselectedFontSize: 12,
           items: const [
             BottomNavigationBarItem(
-                icon: Text('🎯', style: TextStyle(fontSize: 20)),
-                label: 'challenge'),
+                icon: Text('📈', style: TextStyle(fontSize: 20)),
+                label: '예측'),
             BottomNavigationBarItem(
                 icon: Text('🎁', style: TextStyle(fontSize: 20)),
                 label: 'gacha'),

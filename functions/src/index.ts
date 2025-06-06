@@ -264,12 +264,15 @@ export async function settleBets({
     const batch = db.batch();
     const isUp = currentValue > previousValue;
 
+    // 사용자별 결과 모음
+    const resultsByUser: { [uid: string]: string[] } = {};
+
     for (const doc of betSnap.docs) {
         const bet = doc.data();
         const userRef = db.collection('users').doc(bet.uid);
-
         const won = bet.direction === (isUp ? 'up' : 'down');
         const reward = Math.floor(bet.amount * bet.odds);
+
         if (won) {
             batch.update(userRef, {
                 points: admin.firestore.FieldValue.increment(reward),
@@ -287,31 +290,45 @@ export async function settleBets({
         // 기존 베팅 제거
         batch.delete(doc.ref);
 
-        // ✅ 알림 전송 (try/catch 추가)
-        try {
-            await admin.messaging().send({
-                topic: `user_${bet.uid}`,
-                notification: {
-                    title: `📊 ${bet.question}`, // 예: "한 시간 뒤 안양천의 수온은 오를까?"
-                    body: won
-                        ? `🎉 정답! ${bet.amount}P → ${reward}P 획득!`
-                        : `😢 틀렸어요... ${bet.amount}P 베팅 실패`,
-                },
-                data: {
-                    result: won ? 'win' : 'lose',
-                    site_id: site_id,
-                    type_id: type_id,
-                    amount: bet.amount.toString(),
-                },
-            });
-        } catch (error) {
-            console.error(
-                `❗️푸시 전송 실패 (uid: ${bet.uid}):`,
-                (error as Error).message
-            );
-        }
+        // 사용자별 결과 축적
+        const resultLine = won
+            ? `✅ ${bet.question} - ${bet.amount}P → ${reward}P`
+            : `❌ ${bet.question} - ${bet.amount}P 실패`;
+
+        if (!resultsByUser[bet.uid]) resultsByUser[bet.uid] = [];
+        resultsByUser[bet.uid].push(resultLine);
     }
 
     await batch.commit();
     console.log(`✅ ${site_id}_${type_id} 베팅 정산 완료 (${isUp ? '상승' : '하락'})`);
+
+    // ✅ 사용자별 푸시 메시지 전송
+    for (const [uid, resultLines] of Object.entries(resultsByUser)) {
+        const preview = resultLines.slice(0, 4).join('\n');
+        const hasMore = resultLines.length > 4;
+
+        try {
+            await admin.messaging().send({
+                topic: `user_${uid}`,
+                notification: {
+                    title: '📊 베팅 결과가 도착했어요!',
+                    body: `${preview}${hasMore ? '\n외 결과 더 있음...' : ''}`,
+                },
+                data: {
+                    resultCount: resultLines.length.toString(),
+                    site_id,
+                    type_id,
+                },
+            });
+
+            console.log(
+                `📬 푸시 전송 완료 → uid: ${uid}, 총 ${resultLines.length}건 요약 발송`
+            );
+        } catch (error) {
+            console.error(
+                `❗️푸시 전송 실패 (uid: ${uid}):`,
+                (error as Error).message
+            );
+        }
+    }
 }
