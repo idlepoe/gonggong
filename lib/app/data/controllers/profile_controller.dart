@@ -67,4 +67,20 @@ class ProfileController extends GetxController {
         .doc(uid)
         .update({'nickname': newNickname});
   }
+
+  Future<void> updateAvatarUrl(String imageUrl) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'avatarUrl': imageUrl,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+
+    userProfile.update((profile) {
+      if (profile != null) {
+        userProfile.value = profile.copyWith(avatarUrl: imageUrl);
+      }
+    });
+  }
 }

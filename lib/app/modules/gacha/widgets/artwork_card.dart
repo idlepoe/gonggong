@@ -122,11 +122,33 @@ class ArtworkCard extends StatelessWidget {
                     Text("🖌️ 재료: ${artwork.material}"),
                     Text("📏 크기: ${artwork.standard}"),
                     const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      onPressed: () => _launchArtworkSearch(artwork),
-                      icon: const Icon(Icons.open_in_new),
-                      label: const Text("작품 정보 더 보기"),
-                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            _launchArtworkSearch(artwork);
+                          },
+                          icon: const Icon(Icons.open_in_new),
+                          label: const Text("작품 정보 더 보기"),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            final profileController = Get.find<ProfileController>();
+                            profileController.updateAvatarUrl(artwork.mainImage);
+                            Get.snackbar('🙌 완료', '프로필 사진이 변경되었습니다!');
+                          },
+                          icon: const Icon(Icons.account_circle, size: 20),
+                          label: const Text("내 아바타로"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepPurple[100],
+                            foregroundColor: Colors.deepPurple[900],
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            textStyle: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    )
                   ] else ...[
                     Center(
                       child: ClipRRect(
