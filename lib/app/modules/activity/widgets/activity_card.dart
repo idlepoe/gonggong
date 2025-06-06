@@ -19,41 +19,54 @@ class ActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(activity.avatarUrl),
-                  radius: 20,
+    return GestureDetector(
+      onTap: () {
+        if (activity.type == 'artwork') {
+          _handleArtworkTap(context);
+        }
+      },
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 60,
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(activity.avatarUrl),
+                      radius: 20,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(activity.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 10, fontWeight: FontWeight.bold)),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(activity.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
-              ],
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 4),
-                  _buildRichMessage(context, activity.message, activity.type),
-                  const SizedBox(height: 6),
-                  Text(
-                    _formatRelativeTime(activity.createdAt),
-                    style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
-                  )
-                ],
               ),
-            ),
-          ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 4),
+                    _buildRichMessage(context, activity.message, activity.type),
+                    const SizedBox(height: 6),
+                    Text(
+                      _formatRelativeTime(activity.createdAt),
+                      style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -96,19 +109,6 @@ class ActivityCard extends StatelessWidget {
             spans.add(TextSpan(
               text: content,
               style: const TextStyle(color: Colors.red),
-            ));
-            break;
-          case 'artwork':
-            spans.add(TextSpan(
-              text: content,
-              style: const TextStyle(
-                color: Colors.blue,
-                decoration: TextDecoration.underline,
-              ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  _handleArtworkTap(context);
-                },
             ));
             break;
           default:

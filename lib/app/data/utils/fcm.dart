@@ -94,6 +94,7 @@ Future<void> showLocalNotification({
             summaryText: body,
           )
         : BigTextStyleInformation(body),
+    icon: 'ic_stat_notify',
   );
 
   final NotificationDetails platformDetails = NotificationDetails(
