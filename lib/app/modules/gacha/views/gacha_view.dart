@@ -36,7 +36,8 @@ class GachaView extends GetView<GachaController> {
       ),
       body: Obx(() {
         if (controller.artworks.isEmpty && controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+              child: CircularProgressIndicator(strokeCap: StrokeCap.round));
         }
         return ArtworkGridView();
       }),

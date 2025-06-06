@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/bet_controller.dart';
-import '../widgets/expandable_bet_card.dart';
+import '../widgets/bet_card.dart';
 
 class BetView extends GetView<BetController> {
   const BetView({super.key});
@@ -29,14 +29,7 @@ class BetView extends GetView<BetController> {
                 itemBuilder: (context, index) {
                   final info = infos[index];
                   if (info.values.length < 2) return const SizedBox.shrink();
-
-                  final recent = info.values[0].value;
-                  final previous = info.values[1].value;
-                  final probability =
-                      ((recent - previous).clamp(-5, 5) / 10 + 0.5)
-                          .clamp(0.0, 1.0);
-
-                  return ExpandableBetCard(
+                  return BetCard(
                     info: info,
                   );
                 },

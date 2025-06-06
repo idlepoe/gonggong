@@ -166,7 +166,7 @@ export const placeBet = onRequest(async (req, res) => {
             .doc(uid);
 
         // ✅ 취소 처리
-        if (cancel === true) {
+        if (cancel) {
             await db.runTransaction(async (tx) => {
                 const betSnap = await tx.get(betRef);
                 const userSnap = await tx.get(userRef);
@@ -178,8 +178,19 @@ export const placeBet = onRequest(async (req, res) => {
                 const currentPoints = userSnap.data()?.points ?? 0;
 
                 const marketRef = db.collection("measurements").doc(`${site_id}_${type_id}`);
+                const summaryRef = db
+                    .collection("bets")
+                    .doc(`${site_id}_${type_id}`)
+                    .collection("summary")
+                    .doc("totals");
 
-                // 🔹 포인트 환불
+                const summarySnap = await tx.get(summaryRef);
+                if (!summarySnap.exists) throw new Error("❌ summary 정보 없음");
+
+                const isUp = bet.direction === "up";
+                const fieldToDecrement = isUp ? "totalUpAmount" : "totalDownAmount";
+
+                // 🔹 유저 포인트 환불
                 tx.update(userRef, {
                     points: currentPoints + refundAmount,
                 });
@@ -187,8 +198,14 @@ export const placeBet = onRequest(async (req, res) => {
                 // 🔹 베팅 삭제
                 tx.delete(betRef);
 
-                // ✅ 🔹 measurements.updatedAt 갱신
+                // 🔹 measurements.updatedAt 갱신
                 tx.update(marketRef, {
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                });
+
+                // 🔹 summary에서 금액 차감
+                tx.update(summaryRef, {
+                    [fieldToDecrement]: admin.firestore.FieldValue.increment(-bet.amount),
                     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
                 });
             });
@@ -209,8 +226,16 @@ export const placeBet = onRequest(async (req, res) => {
 
         await db.runTransaction(async (tx) => {
             const userSnap = await tx.get(userRef);
-            const currentPoints = userSnap.data()?.points ?? 0;
+            const marketRef = db.collection("measurements").doc(`${site_id}_${type_id}`);
+            const marketSnap = await tx.get(marketRef);
+            const summaryRef = db
+                .collection("bets")
+                .doc(`${site_id}_${type_id}`)
+                .collection("summary")
+                .doc("totals");
+            const summarySnap = await tx.get(summaryRef); // ⬅️ get 먼저!
 
+            const currentPoints = userSnap.data()?.points ?? 0;
             if (currentPoints < amount) {
                 throw new Error("❌ 포인트 부족");
             }
@@ -218,17 +243,17 @@ export const placeBet = onRequest(async (req, res) => {
             const userData = userSnap.data();
             const userName = userData?.name ?? "";
             const avatarUrl = userData?.avatarUrl ?? "";
-
-            const marketRef = db.collection("measurements").doc(`${site_id}_${type_id}`);
-            const marketSnap = await tx.get(marketRef);
             const question = marketSnap.data()?.question ?? "";
 
-            // 포인트 차감
+            const isUp = direction === "up";
+            const fieldToIncrement = isUp ? "totalUpAmount" : "totalDownAmount";
+
+            // 🔹 포인트 차감
             tx.update(userRef, {
                 points: currentPoints - amount,
             });
 
-            // 베팅 정보 저장
+            // 🔹 베팅 저장
             tx.set(betRef, {
                 uid,
                 site_id,
@@ -243,10 +268,24 @@ export const placeBet = onRequest(async (req, res) => {
                 createdAt: admin.firestore.FieldValue.serverTimestamp(),
             });
 
-            // ✅ 🔹 measurements.updatedAt 갱신
+            // 🔹 measurements.updatedAt 갱신
             tx.update(marketRef, {
                 updatedAt: admin.firestore.FieldValue.serverTimestamp(),
             });
+
+            // 🔹 summary 업데이트
+            if (!summarySnap.exists) {
+                tx.set(summaryRef, {
+                    totalUpAmount: isUp ? amount : 0,
+                    totalDownAmount: isUp ? 0 : amount,
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                });
+            } else {
+                tx.update(summaryRef, {
+                    [fieldToIncrement]: admin.firestore.FieldValue.increment(amount),
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                });
+            }
         });
 
         res.status(200).send("✅ 베팅 성공");
@@ -333,6 +372,11 @@ export async function settleBets({
                 notification: {
                     title: '📊 베팅 결과가 도착했어요!',
                     body: bodyLines.join('\n') + (hasMore ? '\n외 결과 더 있음...' : ''),
+                },
+                android: {
+                    notification: {
+                        tag: `bet_result_${Date.now()}`,  // 매번 다른 tag로 겹침 방지
+                    },
                 },
             });
 
@@ -499,16 +543,16 @@ export const purchaseArtwork = onRequest(async (req, res) => {
 
         const authToken = req.headers.authorization?.split('Bearer ')[1];
         if (!authToken) {
-            res.status(401).json({ error: 'Unauthorized: Missing auth token' });
+            res.status(401).json({error: 'Unauthorized: Missing auth token'});
             return;
         }
 
         const decoded = await admin.auth().verifyIdToken(authToken);
         const uid = decoded.uid;
 
-        const { artworkId } = req.body;
+        const {artworkId} = req.body;
         if (!artworkId) {
-            res.status(400).json({ error: 'artworkId는 필수입니다.' });
+            res.status(400).json({error: 'artworkId는 필수입니다.'});
             return;
         }
 
@@ -524,17 +568,17 @@ export const purchaseArtwork = onRequest(async (req, res) => {
         ]);
 
         if (!userSnap.exists) {
-            res.status(404).json({ error: '유저 정보가 없습니다.' });
+            res.status(404).json({error: '유저 정보가 없습니다.'});
             return;
         }
 
         if (!artworkSnap.exists) {
-            res.status(404).json({ error: '작품 정보가 없습니다.' });
+            res.status(404).json({error: '작품 정보가 없습니다.'});
             return;
         }
 
         if (ownedSnap.exists) {
-            res.status(409).json({ error: '이미 소장한 작품입니다.' });
+            res.status(409).json({error: '이미 소장한 작품입니다.'});
             return;
         }
 
@@ -544,7 +588,7 @@ export const purchaseArtwork = onRequest(async (req, res) => {
         const price = artworkData.price ?? 800;
 
         if (userPoints < price) {
-            res.status(400).json({ error: '포인트가 부족합니다.' });
+            res.status(400).json({error: '포인트가 부족합니다.'});
             return;
         }
 
@@ -568,6 +612,6 @@ export const purchaseArtwork = onRequest(async (req, res) => {
         });
     } catch (error) {
         console.error('🔥 Error purchasing artwork:', error);
-        res.status(500).json({ error: '서버 오류가 발생했습니다.' });
+        res.status(500).json({error: '서버 오류가 발생했습니다.'});
     }
 });
