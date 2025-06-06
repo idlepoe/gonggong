@@ -17,16 +17,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0f3d131-9244-4cc6-a4a2-44627efbea21" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/app/modules/gacha/widgets/artwork_card.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/modules/gacha/widgets/artwork_grid_view.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/modules/gacha/widgets/gacha_fab.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/functions/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/constants/app_colors.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/constants/app_colors.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/constants/theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/constants/theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/utils/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/utils/api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/gacha/controllers/gacha_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/gacha/controllers/gacha_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/gacha/views/gacha_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/gacha/views/gacha_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/gacha/widgets/artwork_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/gacha/widgets/artwork_card.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
