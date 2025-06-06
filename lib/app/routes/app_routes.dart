@@ -8,6 +8,7 @@ abstract class Routes {
   static const GACHA = _Paths.GACHA;
   static const BET = _Paths.BET;
   static const ACTIVITY = _Paths.ACTIVITY;
+  static const BET_DETAIL = _Paths.BET_DETAIL;
 }
 
 abstract class _Paths {
@@ -17,4 +18,5 @@ abstract class _Paths {
   static const GACHA = '/gacha';
   static const BET = '/bet';
   static const ACTIVITY = '/activity';
+  static const BET_DETAIL = '/bet-detail';
 }

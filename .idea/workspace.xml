@@ -17,25 +17,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0f3d131-9244-4cc6-a4a2-44627efbea21" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.firebase/hosting.YnVpbGRcd2Vi.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.firebase/hosting.YnVpbGRcd2Vi.cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/images/ic_dust_level.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/app/modules/bet/dialog/show_dust_level_info_dialog.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/etc/delete_account.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/etc/policy.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/etc/report.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-hdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable-hdpi/ic_launcher_foreground.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-mdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable-mdpi/ic_launcher_foreground.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-xhdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable-xhdpi/ic_launcher_foreground.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-xxhdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable-xxhdpi/ic_launcher_foreground.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/drawable-xxxhdpi/ic_launcher_foreground.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable-xxxhdpi/ic_launcher_foreground.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/launcher_icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/launcher_icon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/launcher_icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/launcher_icon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/launcher_icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/launcher_icon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/launcher_icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/launcher_icon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/launcher_icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/launcher_icon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/icon/icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/icon/icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/broken_image.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/google_logo.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/ic_chat.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/ic_fix.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/ic_no_music.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/ic_session_make.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/ic_session_make_grey.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/ic_tab_favorite.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/ic_tab_search.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/ic_tab_track.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/icon-removebg.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/icon-removebg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/mode_dj.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/mode_general.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/images/mode_shuffle.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/src/functions.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/functions/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/favicon.png" beforeDir="false" afterPath="$PROJECT_DIR$/web/favicon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/icons/Icon-192.png" beforeDir="false" afterPath="$PROJECT_DIR$/web/icons/Icon-192.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/icons/Icon-512.png" beforeDir="false" afterPath="$PROJECT_DIR$/web/icons/Icon-512.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/icons/Icon-maskable-192.png" beforeDir="false" afterPath="$PROJECT_DIR$/web/icons/Icon-maskable-192.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/icons/Icon-maskable-512.png" beforeDir="false" afterPath="$PROJECT_DIR$/web/icons/Icon-maskable-512.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/views/bet_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/views/bet_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/widgets/bet_card_header.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/bet_card_header.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,17 +86,17 @@
     "ignore.virus.scanning.warn.message": "true",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Workspace/gonggong/assets/icon",
+    "last_opened_file_path": "C:/Workspace/gonggong/web",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Workspace\gonggong\web" />
+      <recent name="C:\Workspace\gonggong\assets\images" />
+      <recent name="C:\Workspace\gonggong\lib\app\modules\bet\dialog" />
       <recent name="C:\Workspace\gonggong\assets\icon" />
       <recent name="C:\Workspace\gonggong\android\app\src\main\res\drawable" />
-      <recent name="C:\Workspace\gonggong\lib\app\modules\bet\widgets" />
-      <recent name="C:\Workspace\gonggong\lib\app\data\utils" />
-      <recent name="C:\Workspace\gonggong\lib\app\data\constants" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Workspace\gonggong\lib\app\modules\bet\widgets" />

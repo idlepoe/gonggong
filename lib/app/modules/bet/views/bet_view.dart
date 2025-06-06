@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../data/utils/logger.dart';
 import '../controllers/bet_controller.dart';
+import '../dialog/show_dust_level_info_dialog.dart';
 import '../dialog/show_water_temp_info_dialog.dart';
 import '../widgets/bet_card.dart';
 
@@ -21,12 +22,13 @@ class BetView extends GetView<BetController> {
         final allInfos = controller.measurementInfos.values.toList();
         final waterTempInfos =
             allInfos.where((e) => e.type_id == 'water_temp').toList();
-
+        final dustLevelInfos =
+            allInfos.where((e) => e.type_id == 'dust_level').toList();
         return CustomScrollView(
           slivers: [
             SliverStickyHeader(
               header: _buildHeader(
-                title: '서울시 한강 및 주요지천 수질 측정 자료',
+                title: '서울시 주요지천 수온 측정 자료',
                 onInfoPressed: () async {
                   logger.i(await FirebaseMessaging.instance.getToken());
                   showWaterTempInfoDialog(context);
@@ -42,15 +44,24 @@ class BetView extends GetView<BetController> {
                 ),
               ),
             ),
-            // SliverStickyHeader(
-            //   header: _buildHeader(title: '다른 섹션', onInfoPressed: () {}),
-            //   sliver: SliverList(
-            //     delegate: SliverChildBuilderDelegate(
-            //       (context, index) => ListTile(title: Text('기타 항목 $index')),
-            //       childCount: 20,
-            //     ),
-            //   ),
-            // )
+            SliverStickyHeader(
+              header: _buildHeader(
+                title: '서울시 실시간 자치구별 미세먼지 현황',
+                onInfoPressed: () async {
+                  logger.i(await FirebaseMessaging.instance.getToken());
+                  showDustLevelInfoDialog(context);
+                },
+              ),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final info = dustLevelInfos[index];
+                    return BetCard(info: info);
+                  },
+                  childCount: dustLevelInfos.length,
+                ),
+              ),
+            )
           ],
         );
       }),

@@ -17,7 +17,12 @@ class BetCardHeader extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.asset("assets/images/ic_water_temp.png", height: 40),
+        Image.asset(
+          info.type_id == "water_temp"
+              ? "assets/images/ic_water_temp.png"
+              : "assets/images/ic_dust_level.png",
+          height: 40,
+        ),
         const SizedBox(width: 8),
         Expanded(
           child: Column(
