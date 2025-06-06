@@ -225,7 +225,7 @@ export const placeBet = onRequest(async (req, res) => {
                 name: userName,
                 avatarUrl,
                 createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                message: `❎ <strong>${bet.question}</strong> — <point>${bet.amount}P</point> 베팅을 취소해 <point>${refundAmount}P</point> 환불 받았어요`,
+                message: `🌀 ${bet.question}\n❎ <point>${bet.amount}P</point> 베팅 취소 → <point>${refundAmount}P</point> 환불`,
             });
 
             res.status(200).send("🪙 베팅 취소 완료 (15% 수수료 제외)");
@@ -315,7 +315,7 @@ export const placeBet = onRequest(async (req, res) => {
             site_id,
             type_id,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            message: `🌀 ${question} (<highlight>${siteSlugMap[site_id]}</highlight>)\n🎯 <point>${amount}P</point> 베팅 → <${direction === 'up' ? 'dir_up' : 'dir_down'}>${direction === 'up' ? '상승' : '하락'}</${direction === 'up' ? 'dir_up' : 'dir_down'}> 예측`,
+            message: `🌀 ${question}\n🎯 <point>${amount}P</point> 베팅 → <${direction === 'up' ? 'dir_up' : 'dir_down'}>${direction === 'up' ? '상승' : '하락'}</${direction === 'up' ? 'dir_up' : 'dir_down'}> 예측`,
         });
 
         res.status(200).send("✅ 베팅 성공");
@@ -344,7 +344,7 @@ export async function settleBets({
     const isUp = currentValue > previousValue;
 
     // 사용자별 결과 모음
-    const resultsByUser: { [uid: string]: string[] } = {};
+    const resultsByUser: { [uid: string]: string } = {};
 
     for (const doc of betSnap.docs) {
         const bet = doc.data();
@@ -374,8 +374,11 @@ export async function settleBets({
             ? `✅ ${bet.question} - ${bet.amount}P → ${reward}P`
             : `❌ ${bet.question} - ${bet.amount}P 실패`;
 
-        if (!resultsByUser[bet.uid]) resultsByUser[bet.uid] = [];
-        resultsByUser[bet.uid].push(resultLine);
+        if (!resultsByUser[bet.uid]) {
+            resultsByUser[bet.uid] = resultLine;
+        } else {
+            resultsByUser[bet.uid] += `\n${resultLine}`;
+        }
     }
 
     await batch.commit();
@@ -399,37 +402,47 @@ export async function settleBets({
         console.error(`❗ summary 초기화 실패:`, (e as Error).message);
     }
 
-    for (const [uid, resultLines] of Object.entries(resultsByUser)) {
+    for (const [uid, resultText] of Object.entries(resultsByUser)) {
         try {
             // 최대 길이 제한 고려
-            let bodyLines: string[] = [];
-            let currentLength = 0;
-            const MAX_BODY_LENGTH = 230; // 최대 바이트 제한 고려 (디바이스별 다름)
+            const MAX_BODY_LENGTH = 230;
 
-            for (const line of resultLines) {
-                const newLength = currentLength + line.length + 1; // +1 for 줄바꿈
-                if (newLength > MAX_BODY_LENGTH) break;
-                bodyLines.push(line);
-                currentLength = newLength;
+            let body = resultText;
+            let hasMore = false;
+
+            if (body.length > MAX_BODY_LENGTH) {
+                // 최대 길이 초과 시 줄 단위로 잘라서 일부만 보여주기
+                const lines = body.split('\n');
+                let trimmedLines: string[] = [];
+                let currentLength = 0;
+
+                for (const line of lines) {
+                    const newLength = currentLength + line.length + 1; // +1 for 줄바꿈
+                    if (newLength > MAX_BODY_LENGTH) break;
+                    trimmedLines.push(line);
+                    currentLength = newLength;
+                }
+
+                body = trimmedLines.join('\n') + '\n외 결과 더 있음...';
+                hasMore = true;
             }
-
-            const hasMore = bodyLines.length < resultLines.length;
 
             await admin.messaging().send({
                 topic: `user_${uid}`,
                 notification: {
                     title: '📊 베팅 결과가 도착했어요!',
-                    body: bodyLines.join('\n') + (hasMore ? '\n외 결과 더 있음...' : ''),
+                    body,
                 },
                 android: {
                     notification: {
-                        tag: `bet_result_${Date.now()}`,  // 매번 다른 tag로 겹침 방지
+                        // 고유 태그로 덮어쓰기 방지
+                        tag: `bet_result_${uid}_${Date.now()}_${Math.floor(Math.random() * 10000)}`
                     },
                 },
             });
 
             console.log(
-                `📬 푸시 전송 완료 → uid: ${uid}, 총 ${resultLines.length}건`
+                `📬 푸시 전송 완료 → uid: ${uid}, 길이 ${body.length}${hasMore ? ' (일부 생략)' : ''}`
             );
         } catch (error) {
             console.error(

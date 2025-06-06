@@ -25,10 +25,7 @@ class ActivityView extends StatelessWidget {
           itemBuilder: (context, index) {
             Activity row = controller.activities[index];
             return ActivityCard(
-              avatarUrl: row.avatarUrl,
-              name: row.name,
-              message: row.message,
-              createdAt: row.createdAt,
+              activity: row,
             );
           },
         );

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../../../data/constants/api_constants.dart';
@@ -33,7 +34,8 @@ class SplashController extends GetxController {
 
   String generateRandomNickname() {
     final random = Random();
-    final prefix = ApiConstants.nicknamePrefixes[random.nextInt(ApiConstants.nicknamePrefixes.length)];
+    final prefix = ApiConstants
+        .nicknamePrefixes[random.nextInt(ApiConstants.nicknamePrefixes.length)];
     final number = (100 + random.nextInt(900)).toString(); // 100 ~ 999
     return '$prefix$number';
   }
@@ -53,6 +55,8 @@ class SplashController extends GetxController {
       });
     }
     FirebaseAuth.instance.currentUser!.updateDisplayName(nickname);
-    FirebaseMessaging.instance.subscribeToTopic('user_$uid');
+    if (!kIsWeb) {
+      FirebaseMessaging.instance.subscribeToTopic('user_$uid');
+    }
   }
 }

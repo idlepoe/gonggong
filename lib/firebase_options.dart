@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -36,10 +33,7 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -57,6 +51,30 @@ class DefaultFirebaseOptions {
     appId: '1:880975820992:android:d21460c2863f39826e9525',
     messagingSenderId: '880975820992',
     projectId: 'gong-nol',
+    databaseURL: 'https://gong-nol-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'gong-nol.firebasestorage.app',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCBN02-jNs84EQN3YuFMpHaQ1An4ONXjkc',
+    appId: '1:880975820992:web:093f53880e789c496e9525',
+    messagingSenderId: '880975820992',
+    projectId: 'gong-nol',
+    authDomain: 'gong-nol.firebaseapp.com',
+    databaseURL: 'https://gong-nol-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'gong-nol.firebasestorage.app',
+    measurementId: 'G-CFQ0NLKL9D',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyCBN02-jNs84EQN3YuFMpHaQ1An4ONXjkc',
+    appId: '1:880975820992:web:9f41e00243fac7bd6e9525',
+    messagingSenderId: '880975820992',
+    projectId: 'gong-nol',
+    authDomain: 'gong-nol.firebaseapp.com',
+    databaseURL: 'https://gong-nol-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'gong-nol.firebasestorage.app',
+    measurementId: 'G-YSC77SNW4E',
+  );
+
 }

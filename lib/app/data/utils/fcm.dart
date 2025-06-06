@@ -87,14 +87,13 @@ Future<void> showLocalNotification({
     'Default',
     importance: Importance.max,
     priority: Priority.high,
-    styleInformation:
-        avatarUrl.isNotEmpty
-            ? BigPictureStyleInformation(
-              FilePathAndroidBitmap(avatarUrl), // 🔥 프로필 이미지 표시
-              contentTitle: title,
-              summaryText: body,
-            )
-            : null,
+    styleInformation: avatarUrl.isNotEmpty
+        ? BigPictureStyleInformation(
+            FilePathAndroidBitmap(avatarUrl), // 🔥 프로필 이미지 표시
+            contentTitle: title,
+            summaryText: body,
+          )
+        : BigTextStyleInformation(body),
   );
 
   final NotificationDetails platformDetails = NotificationDetails(

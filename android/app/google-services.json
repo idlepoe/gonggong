@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "880975820992",
+    "firebase_url": "https://gong-nol-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "gong-nol",
     "storage_bucket": "gong-nol.firebasestorage.app"
   },
