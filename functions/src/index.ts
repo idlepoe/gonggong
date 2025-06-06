@@ -19,16 +19,34 @@ export const scheduledFetchAndResolveBets = onSchedule("20 * * * *", async () =>
     try {
         // ① 수온 데이터 수집 및 저장
         await fetchWaterData(); // ✅ docId + data 반환
+        await fetchDustLevel();
     } catch (e) {
         logger.error("📛 scheduledFetchAndResolveBets 실패", e);
     }
 });
 
 
-export const fetchWaterSnapshot = onRequest(async (req, res) => {
+export const fetchWaterManual = onRequest(async (req, res) => {
     try {
         // ① 수온 데이터 수집 및 저장
         await fetchWaterData(); // ✅ docId + data 반환
+        res.status(200).json({
+            success: true,
+            message: "✅ 수온 데이터 저장 완료",
+        });
+    } catch (e: any) {
+        console.error("📛 fetchWaterSnapshot 실패", e);
+        res.status(500).json({
+            success: false,
+            message: e.message ?? "알 수 없는 오류",
+        });
+    }
+});
+
+export const fetchDustLevelManual = onRequest(async (req, res) => {
+    try {
+        // ① 수온 데이터 수집 및 저장
+        await fetchDustLevel(); // ✅ docId + data 반환
         res.status(200).json({
             success: true,
             message: "✅ 수온 데이터 저장 완료",
@@ -139,6 +157,93 @@ export async function fetchWaterData(): Promise<void> {
     console.log(`✅ ${filtered.length}개의 수온 데이터 저장 및 정산 완료`);
 }
 
+export async function fetchDustLevel(): Promise<void> {
+    const API_KEY = "53574b6e7069646c3631646b4a4e53";
+    const url = `http://openapi.seoul.go.kr:8088/${API_KEY}/json/ListAirQualityByDistrictService/1/25`;
+
+    const response = await axios.get(url);
+    const rows = response.data?.ListAirQualityByDistrictService?.row ?? [];
+
+    const now = new Date(Date.now() + 9 * 60 * 60 * 1000); // KST
+    now.setMinutes(0, 0, 0);
+    const msrDate = `${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, "0")}${now.getDate().toString().padStart(2, "0")}`;
+    const msrHour = `${now.getHours().toString().padStart(2, "0")}00`;
+    const msrDateTime = `${msrDate}${msrHour}`;
+
+    const filtered = rows.filter(
+        (row: any) =>
+            row.MSRDATE === msrDateTime &&
+            parseFloat(row.PM10) > 0
+    );
+
+    if (filtered.length === 0) throw new Error(`${msrDateTime} 시각의 미세먼지 데이터 없음`);
+
+    const type_id = "dust_level";
+    const type_name = "미세먼지농도";
+    const unit = "㎍/㎥";
+    const interval = "1시간";
+
+    const db = admin.firestore();
+    const batch = db.batch();
+
+    for (const row of filtered) {
+        const site_id = row.MSRADMCODE;
+        const site_name = row.MSRSTENAME;
+        const value = parseFloat(row.PM10);
+
+        const startDate = new Date(`${row.MSRDATE.slice(0, 4)}-${row.MSRDATE.slice(4, 6)}-${row.MSRDATE.slice(6, 8)}T${row.MSRDATE.slice(8, 10)}:00:00+09:00`);
+        const endDate = new Date(startDate.getTime() + 80 * 60 * 1000);
+
+        const parentDocId = `${site_id}_${type_id}`;
+        const valueDocId = row.MSRDATE;
+        const question = `한 시간 뒤 ${site_name}의 미세먼지 농도는 높아질까?`;
+
+        const parentRef = db.collection("measurements").doc(parentDocId);
+        const valueRef = parentRef.collection("values").doc(valueDocId);
+
+        // ✅ 이전 값 가져오기
+        const prevSnap = await parentRef
+            .collection("values")
+            .orderBy("startDate", "desc")
+            .limit(1)
+            .get();
+
+        if (!prevSnap.empty) {
+            const prevValue = prevSnap.docs[0].data().value;
+
+            // ✅ 정산 실행
+            await settleBets({
+                site_id,
+                type_id,
+                previousValue: prevValue,
+                currentValue: value,
+            });
+        }
+
+        // ✅ Firestore 저장
+        batch.set(parentRef, {
+            site_id,
+            site_name,
+            type_id,
+            type_name,
+            unit,
+            question,
+            interval,
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+
+        batch.set(valueRef, {
+            name: site_name,
+            value,
+            startDate,
+            endDate,
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+    }
+
+    await batch.commit();
+    console.log(`✅ ${filtered.length}개의 미세먼지 데이터 저장 및 정산 완료`);
+}
 
 export const placeBet = onRequest(async (req, res) => {
     try {
