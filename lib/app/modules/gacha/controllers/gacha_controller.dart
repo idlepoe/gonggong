@@ -10,7 +10,6 @@ class GachaController extends GetxController {
   final artworks = <Artwork>[].obs;
   final ownedIds = <String>{}.obs;
 
-
   final isLoading = false.obs;
   final hasMore = true.obs;
 
@@ -88,15 +87,15 @@ class GachaController extends GetxController {
       if (uid == null) return;
 
       final snapshot = await _firestore
-          .collection('user_owned_artworks')
+          .collection('users')
           .doc(uid)
+          .collection('artworks') // ✅ 서브컬렉션 경로
           .get();
 
-      if (snapshot.exists) {
-        final data = snapshot.data() as Map<String, dynamic>;
-        final ids = List<String>.from(data['owned'] ?? []);
-        ownedIds.addAll(ids);
-      }
+      final ids = snapshot.docs.map((doc) => doc.id).toList();
+      ownedIds.addAll(ids);
+
+      logger.i("✅ 소장 작품 ID: $ownedIds");
     } catch (e) {
       print("🔥 Error fetching owned artwork IDs: $e");
     }

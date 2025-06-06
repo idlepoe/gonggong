@@ -5,5 +5,5 @@ class ApiConstants {
   static const String placeBet = "/placeBet";
   static const String cancelBet = "/cancelBet";
   static const String purchaseRandomArtwork = "/purchaseRandomArtwork";
-  static const String purchaseArtwork = "/purchaseRandomArtwork";
+  static const String purchaseArtwork = "/purchaseArtwork";
 }

@@ -17,25 +17,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0f3d131-9244-4cc6-a4a2-44627efbea21" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/app/data/controllers/profile_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/models/artwork_model.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/data/models/user_profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/functions/src/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/app/data/constants/api_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/constants/api_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/utils/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/utils/api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/widgets/expandable_bet_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/expandable_bet_card.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/app/modules/gacha/controllers/gacha_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/gacha/controllers/gacha_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/app/modules/gacha/views/gacha_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/gacha/views/gacha_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/bindings/home_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/bindings/home_binding.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/views/home_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/views/home_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/widgets/user_profile_badge.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/widgets/user_profile_badge.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/profile/bindings/profile_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/profile/bindings/profile_binding.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/profile/controllers/profile_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/profile/controllers/profile_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/profile/views/profile_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/profile/views/profile_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

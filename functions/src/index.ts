@@ -314,20 +314,18 @@ export async function settleBets({
 
     // ✅ 사용자별 푸시 메시지 전송
     for (const [uid, resultLines] of Object.entries(resultsByUser)) {
-        const preview = resultLines.slice(0, 4).join('\n');
-        const hasMore = resultLines.length > 4;
-
         try {
             await admin.messaging().send({
                 topic: `user_${uid}`,
                 notification: {
                     title: '📊 베팅 결과가 도착했어요!',
-                    body: `${preview}${hasMore ? '\n외 결과 더 있음...' : ''}`,
+                    body: `총 ${resultLines.length}건의 결과를 확인해보세요.`,
                 },
                 data: {
-                    resultCount: resultLines.length.toString(),
+                    resultLines: resultLines.join('\n'),  // 최대 길이 고려
                     site_id,
                     type_id,
+                    resultCount: resultLines.length.toString(),
                 },
             });
 
@@ -406,7 +404,7 @@ async function performSeoulMuseumGachaSync() {
     }
 }
 
-export const purchaseRandomArtwork  = onRequest(async (req, res) => {
+export const purchaseRandomArtwork = onRequest(async (req, res) => {
     try {
         const db = admin.firestore();
 
@@ -492,17 +490,25 @@ export const purchaseArtwork = onRequest(async (req, res) => {
             return;
         }
 
-        const { uid, artworkId } = req.body;
+        const authToken = req.headers.authorization?.split('Bearer ')[1];
+        if (!authToken) {
+            res.status(401).json({ error: 'Unauthorized: Missing auth token' });
+            return;
+        }
 
-        if (!uid || !artworkId) {
-            res.status(400).json({ error: 'uid와 artworkId는 필수입니다.' });
+        const decoded = await admin.auth().verifyIdToken(authToken);
+        const uid = decoded.uid;
+
+        const { artworkId } = req.body;
+        if (!artworkId) {
+            res.status(400).json({ error: 'artworkId는 필수입니다.' });
             return;
         }
 
         const db = admin.firestore();
         const userRef = db.collection('users').doc(uid);
         const artworkRef = db.collection('artworks').doc(artworkId);
-        const ownedArtworkRef = userRef.collection('artworks').doc(artworkId); // ✅ 서브컬렉션
+        const ownedArtworkRef = userRef.collection('artworks').doc(artworkId);
 
         const [userSnap, artworkSnap, ownedSnap] = await Promise.all([
             userRef.get(),
@@ -537,13 +543,11 @@ export const purchaseArtwork = onRequest(async (req, res) => {
 
         const batch = db.batch();
 
-        // ✅ 작품 소유 정보 추가 (서브컬렉션)
         batch.set(ownedArtworkRef, {
             count: 1,
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 
-        // 포인트 차감
         batch.update(userRef, {
             points: admin.firestore.FieldValue.increment(-price),
         });
