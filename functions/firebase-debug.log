@@ -1,0 +1,88 @@
+[debug] [2025-06-06T11:23:55.327Z] ----------------------------------------------------------------------
+[debug] [2025-06-06T11:23:55.335Z] Command:       C:\nvm4w\nodejs\node.exe C:\nvm4w\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2025-06-06T11:23:55.335Z] CLI Version:   14.4.0
+[debug] [2025-06-06T11:23:55.336Z] Platform:      win32
+[debug] [2025-06-06T11:23:55.336Z] Node Version:  v24.0.2
+[debug] [2025-06-06T11:23:55.336Z] Time:          Fri Jun 06 2025 20:23:55 GMT+0900 (대한민국 표준시)
+[debug] [2025-06-06T11:23:55.336Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-06-06T11:23:55.513Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-06-06T11:23:55.522Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-06-06T11:23:55.522Z] > authorizing via signed-in user (idlepoe@gmail.com)
+[debug] [2025-06-06T11:23:55.522Z] [iam] checking project gong-nol for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2025-06-06T11:23:55.523Z] Checked if tokens are valid: false, expires at: 1749209774585
+[debug] [2025-06-06T11:23:55.523Z] Checked if tokens are valid: false, expires at: 1749209774585
+[debug] [2025-06-06T11:23:55.524Z] > refreshing access token with scopes: []
+[debug] [2025-06-06T11:23:55.525Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-06-06T11:23:55.525Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-06-06T11:23:55.837Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-06-06T11:23:55.837Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-06-06T11:23:55.855Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/gong-nol:testIamPermissions [none]
+[debug] [2025-06-06T11:23:55.855Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/gong-nol:testIamPermissions x-goog-quota-user=projects/gong-nol
+[debug] [2025-06-06T11:23:55.855Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gong-nol:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-06-06T11:23:56.161Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/gong-nol:testIamPermissions 200
+[debug] [2025-06-06T11:23:56.162Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gong-nol:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-06-06T11:23:56.162Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:23:56.162Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:23:56.162Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/gong-nol/serviceAccounts/gong-nol@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-06-06T11:23:56.162Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/gong-nol/serviceAccounts/gong-nol@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-06-06T11:23:57.202Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/gong-nol/serviceAccounts/gong-nol@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-06-06T11:23:57.202Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/gong-nol/serviceAccounts/gong-nol@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'gong-nol'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] +  functions: Finished running predeploy script. 
+[debug] [2025-06-06T11:24:06.406Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:06.407Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:06.407Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/cloudresourcemanager.googleapis.com [none]
+[debug] [2025-06-06T11:24:06.407Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/cloudresourcemanager.googleapis.com x-goog-quota-user=projects/gong-nol
+[debug] [2025-06-06T11:24:07.624Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/cloudresourcemanager.googleapis.com 200
+[debug] [2025-06-06T11:24:07.624Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/cloudresourcemanager.googleapis.com [omitted]
+[debug] [2025-06-06T11:24:07.624Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:07.624Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:07.624Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/gong-nol [none]
+[debug] [2025-06-06T11:24:08.388Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/gong-nol 200
+[debug] [2025-06-06T11:24:08.388Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/gong-nol {"projectNumber":"880975820992","projectId":"gong-nol","lifecycleState":"ACTIVE","name":"gong-nol","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-06-03T05:22:15.344032Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2025-06-06T11:24:08.389Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:08.389Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:08.389Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:08.389Z] Checked if tokens are valid: true, expires at: 1749212634837
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2025-06-06T11:24:08.390Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:08.390Z] Checked if tokens are valid: true, expires at: 1749212634837
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-06-06T11:24:08.390Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:08.390Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:08.390Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-06-06T11:24:08.390Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/gong-nol
+[debug] [2025-06-06T11:24:08.391Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-06-06T11:24:08.391Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/gong-nol
+[debug] [2025-06-06T11:24:08.393Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/cloudbuild.googleapis.com [none]
+[debug] [2025-06-06T11:24:08.393Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/cloudbuild.googleapis.com x-goog-quota-user=projects/gong-nol
+[debug] [2025-06-06T11:24:08.395Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/artifactregistry.googleapis.com [none]
+[debug] [2025-06-06T11:24:08.395Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/artifactregistry.googleapis.com x-goog-quota-user=projects/gong-nol
+[debug] [2025-06-06T11:24:08.703Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/cloudfunctions.googleapis.com 200
+[debug] [2025-06-06T11:24:08.703Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/cloudfunctions.googleapis.com [omitted]
+[info] +  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2025-06-06T11:24:09.565Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/runtimeconfig.googleapis.com 200
+[debug] [2025-06-06T11:24:09.565Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2025-06-06T11:24:09.588Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/artifactregistry.googleapis.com 200
+[debug] [2025-06-06T11:24:09.588Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/artifactregistry.googleapis.com [omitted]
+[info] +  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2025-06-06T11:24:09.590Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/cloudbuild.googleapis.com 200
+[debug] [2025-06-06T11:24:09.590Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/gong-nol/services/cloudbuild.googleapis.com [omitted]
+[info] +  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2025-06-06T11:24:09.591Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:09.591Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:09.592Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/gong-nol/adminSdkConfig [none]
+[debug] [2025-06-06T11:24:10.052Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/gong-nol/adminSdkConfig 200
+[debug] [2025-06-06T11:24:10.052Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/gong-nol/adminSdkConfig {"projectId":"gong-nol","databaseURL":"https://gong-nol-default-rtdb.asia-southeast1.firebasedatabase.app","storageBucket":"gong-nol.firebasestorage.app"}
+[debug] [2025-06-06T11:24:10.053Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:10.053Z] Checked if tokens are valid: true, expires at: 1749212634837
+[debug] [2025-06-06T11:24:10.053Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gong-nol/configs [none]
+[debug] [2025-06-06T11:24:10.458Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gong-nol/configs 200
+[debug] [2025-06-06T11:24:10.458Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gong-nol/configs {}

@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserProfile {
   String get uid;
-  String get nickname;
+  String get name;
   String get avatarUrl;
   int get points;
 
@@ -36,8 +36,7 @@ mixin _$UserProfile {
         (other.runtimeType == runtimeType &&
             other is UserProfile &&
             (identical(other.uid, uid) || other.uid == uid) &&
-            (identical(other.nickname, nickname) ||
-                other.nickname == nickname) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.avatarUrl, avatarUrl) ||
                 other.avatarUrl == avatarUrl) &&
             (identical(other.points, points) || other.points == points));
@@ -45,12 +44,11 @@ mixin _$UserProfile {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, uid, nickname, avatarUrl, points);
+  int get hashCode => Object.hash(runtimeType, uid, name, avatarUrl, points);
 
   @override
   String toString() {
-    return 'UserProfile(uid: $uid, nickname: $nickname, avatarUrl: $avatarUrl, points: $points)';
+    return 'UserProfile(uid: $uid, name: $name, avatarUrl: $avatarUrl, points: $points)';
   }
 }
 
@@ -60,7 +58,7 @@ abstract mixin class $UserProfileCopyWith<$Res> {
           UserProfile value, $Res Function(UserProfile) _then) =
       _$UserProfileCopyWithImpl;
   @useResult
-  $Res call({String uid, String nickname, String avatarUrl, int points});
+  $Res call({String uid, String name, String avatarUrl, int points});
 }
 
 /// @nodoc
@@ -76,7 +74,7 @@ class _$UserProfileCopyWithImpl<$Res> implements $UserProfileCopyWith<$Res> {
   @override
   $Res call({
     Object? uid = null,
-    Object? nickname = null,
+    Object? name = null,
     Object? avatarUrl = null,
     Object? points = null,
   }) {
@@ -85,9 +83,9 @@ class _$UserProfileCopyWithImpl<$Res> implements $UserProfileCopyWith<$Res> {
           ? _self.uid
           : uid // ignore: cast_nullable_to_non_nullable
               as String,
-      nickname: null == nickname
-          ? _self.nickname
-          : nickname // ignore: cast_nullable_to_non_nullable
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
       avatarUrl: null == avatarUrl
           ? _self.avatarUrl
@@ -106,7 +104,7 @@ class _$UserProfileCopyWithImpl<$Res> implements $UserProfileCopyWith<$Res> {
 class _UserProfile implements UserProfile {
   const _UserProfile(
       {required this.uid,
-      this.nickname = '',
+      this.name = '',
       this.avatarUrl = '',
       this.points = 0});
   factory _UserProfile.fromJson(Map<String, dynamic> json) =>
@@ -116,7 +114,7 @@ class _UserProfile implements UserProfile {
   final String uid;
   @override
   @JsonKey()
-  final String nickname;
+  final String name;
   @override
   @JsonKey()
   final String avatarUrl;
@@ -145,8 +143,7 @@ class _UserProfile implements UserProfile {
         (other.runtimeType == runtimeType &&
             other is _UserProfile &&
             (identical(other.uid, uid) || other.uid == uid) &&
-            (identical(other.nickname, nickname) ||
-                other.nickname == nickname) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.avatarUrl, avatarUrl) ||
                 other.avatarUrl == avatarUrl) &&
             (identical(other.points, points) || other.points == points));
@@ -154,12 +151,11 @@ class _UserProfile implements UserProfile {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, uid, nickname, avatarUrl, points);
+  int get hashCode => Object.hash(runtimeType, uid, name, avatarUrl, points);
 
   @override
   String toString() {
-    return 'UserProfile(uid: $uid, nickname: $nickname, avatarUrl: $avatarUrl, points: $points)';
+    return 'UserProfile(uid: $uid, name: $name, avatarUrl: $avatarUrl, points: $points)';
   }
 }
 
@@ -171,7 +167,7 @@ abstract mixin class _$UserProfileCopyWith<$Res>
       __$UserProfileCopyWithImpl;
   @override
   @useResult
-  $Res call({String uid, String nickname, String avatarUrl, int points});
+  $Res call({String uid, String name, String avatarUrl, int points});
 }
 
 /// @nodoc
@@ -187,7 +183,7 @@ class __$UserProfileCopyWithImpl<$Res> implements _$UserProfileCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   $Res call({
     Object? uid = null,
-    Object? nickname = null,
+    Object? name = null,
     Object? avatarUrl = null,
     Object? points = null,
   }) {
@@ -196,9 +192,9 @@ class __$UserProfileCopyWithImpl<$Res> implements _$UserProfileCopyWith<$Res> {
           ? _self.uid
           : uid // ignore: cast_nullable_to_non_nullable
               as String,
-      nickname: null == nickname
-          ? _self.nickname
-          : nickname // ignore: cast_nullable_to_non_nullable
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
       avatarUrl: null == avatarUrl
           ? _self.avatarUrl

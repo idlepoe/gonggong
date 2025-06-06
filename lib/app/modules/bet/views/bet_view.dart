@@ -10,7 +10,6 @@ class BetView extends GetView<BetController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("도전 베팅")),
       body: Obx(() {
         final infos = controller.measurementInfos.values.toList();
 

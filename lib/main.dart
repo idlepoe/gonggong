@@ -32,7 +32,7 @@ Future<void> main() async {
   runApp(
     FlutterWebFrame(
       builder: (context) => GetMaterialApp(
-        title: 'ulala'.tr,
+        title: '공공놀이터',
         translations: AppTranslations(),
         locale: Get.deviceLocale,
         fallbackLocale: const Locale('en', 'US'),

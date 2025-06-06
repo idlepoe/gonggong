@@ -3,10 +3,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../data/utils/logger.dart';
+import '../../activity/views/activity_view.dart';
 import '../../bet/views/bet_view.dart';
 import '../../gacha/views/gacha_view.dart';
-import '../../profile/views/profile_view.dart';
-import '../../ranking/views/ranking_view.dart';
 import '../controllers/home_controller.dart';
 import '../widgets/user_profile_badge.dart';
 
@@ -36,8 +35,7 @@ class HomeView extends GetView<HomeController> {
           children: [
             BetView(),
             const GachaView(),
-            const RankingView(),
-            const ProfileView(),
+            ActivityView(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -48,17 +46,11 @@ class HomeView extends GetView<HomeController> {
           unselectedFontSize: 12,
           items: const [
             BottomNavigationBarItem(
-                icon: Text('📈', style: TextStyle(fontSize: 20)),
-                label: '예측'),
+                icon: Text('📈', style: TextStyle(fontSize: 20)), label: '예측'),
             BottomNavigationBarItem(
-                icon: Text('🖼️', style: TextStyle(fontSize: 20)),
-                label: '작품'),
+                icon: Text('🖼️', style: TextStyle(fontSize: 20)), label: '작품'),
             BottomNavigationBarItem(
-                icon: Text('🏆', style: TextStyle(fontSize: 20)),
-                label: 'ranking'),
-            BottomNavigationBarItem(
-                icon: Text('👤', style: TextStyle(fontSize: 20)),
-                label: 'profile'),
+                icon: Text('🧾', style: TextStyle(fontSize: 20)), label: '활동'),
           ],
         ),
       );

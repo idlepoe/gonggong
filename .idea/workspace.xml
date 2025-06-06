@@ -17,19 +17,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0f3d131-9244-4cc6-a4a2-44627efbea21" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/app/data/models/bet_card_stats.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/modules/bet/controllers/bet_card_stats_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/bet_card_collapsed.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/bet_card_footer.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/bet_card_form.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/bet_card_header.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/bet_card_summary.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/app/data/models/activity.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/app/modules/activity/widgets/activity_card.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/functions/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/data/constants/api_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/constants/api_constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/data/controllers/profile_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/controllers/profile_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/data/models/user_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/models/user_profile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/data/models/user_profile.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/models/user_profile.freezed.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/data/models/user_profile.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/models/user_profile.g.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/views/bet_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/views/bet_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/widgets/expandable_bet_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/bet_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/widgets/interval_with_timer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/interval_with_timer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/gacha/views/gacha_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/gacha/views/gacha_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/bindings/home_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/bindings/home_binding.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/views/home_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/views/home_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/widgets/user_profile_badge.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/widgets/user_profile_badge.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/profile/bindings/profile_binding.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/profile/controllers/profile_controller.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/profile/views/profile_view.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/ranking/bindings/ranking_binding.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/ranking/controllers/ranking_controller.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/ranking/views/ranking_view.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/splash/controllers/splash_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/splash/controllers/splash_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/routes/app_pages.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/routes/app_pages.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/routes/app_routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/routes/app_routes.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

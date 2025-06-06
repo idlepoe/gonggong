@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 
+import '../../../data/constants/api_constants.dart';
 import '../../../routes/app_pages.dart';
 
 class SplashController extends GetxController {
@@ -30,37 +31,9 @@ class SplashController extends GetxController {
     }
   }
 
-  final List<String> nicknamePrefixes = [
-    '강남의배당왕🐯',
-    '강동의승부사🐲',
-    '강북의올인러🃏',
-    '강서의예측러🔮',
-    '관악의물고기🎣',
-    '광진의포인트헌터🦊',
-    '구로의주사위🎲',
-    '금천의배팅달인🐵',
-    '노원의찬스왕🐶',
-    '도봉의승률러📈',
-    '동대문의파도타기🌊',
-    '동작의핫핸드🔥',
-    '마포의스탯러📊',
-    '서대문의잔고부자💰',
-    '서초의올인마스터🧙',
-    '성동의한방러⚡️',
-    '성북의도전왕👑',
-    '송파의랠리러🏁',
-    '양천의포인트먹깨비🍭',
-    '영등포의배팅야수🐻',
-    '용산의타짜🦈',
-    '은평의박수꾼👏',
-    '종로의예측신🎯',
-    '중구의꾼🎩',
-    '중랑의승부욕🐺',
-  ];
-
   String generateRandomNickname() {
     final random = Random();
-    final prefix = nicknamePrefixes[random.nextInt(nicknamePrefixes.length)];
+    final prefix = ApiConstants.nicknamePrefixes[random.nextInt(ApiConstants.nicknamePrefixes.length)];
     final number = (100 + random.nextInt(900)).toString(); // 100 ~ 999
     return '$prefix$number';
   }
@@ -74,7 +47,7 @@ class SplashController extends GetxController {
     if (!snapshot.exists) {
       await docRef.set({
         'points': 1000,
-        'nickname': nickname,
+        'name': nickname,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       });

@@ -7,7 +7,7 @@ part 'user_profile.g.dart';
 abstract class UserProfile with _$UserProfile {
   const factory UserProfile({
     required String uid,
-    @Default('') String nickname,
+    @Default('') String name,
     @Default('') String avatarUrl,
     @Default(0)  int points,
   }) = _UserProfile;

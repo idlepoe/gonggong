@@ -1,15 +1,13 @@
 import 'package:get/get.dart';
 
+import '../modules/activity/bindings/activity_binding.dart';
+import '../modules/activity/views/activity_view.dart';
 import '../modules/bet/bindings/bet_binding.dart';
 import '../modules/bet/views/bet_view.dart';
 import '../modules/gacha/bindings/gacha_binding.dart';
 import '../modules/gacha/views/gacha_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
-import '../modules/profile/bindings/profile_binding.dart';
-import '../modules/profile/views/profile_view.dart';
-import '../modules/ranking/bindings/ranking_binding.dart';
-import '../modules/ranking/views/ranking_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 
@@ -37,19 +35,14 @@ class AppPages {
       binding: GachaBinding(),
     ),
     GetPage(
-      name: _Paths.PROFILE,
-      page: () => const ProfileView(),
-      binding: ProfileBinding(),
-    ),
-    GetPage(
-      name: _Paths.RANKING,
-      page: () => const RankingView(),
-      binding: RankingBinding(),
-    ),
-    GetPage(
       name: _Paths.BET,
       page: () => BetView(),
       binding: BetBinding(),
+    ),
+    GetPage(
+      name: _Paths.ACTIVITY,
+      page: () => const ActivityView(),
+      binding: ActivityBinding(),
     ),
   ];
 }

@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
+import '../constants/api_constants.dart';
 import '../models/user_profile.dart';
 
 class ProfileController extends GetxController {
@@ -59,13 +61,20 @@ class ProfileController extends GetxController {
     });
   }
 
-  Future<void> updateNickname(String newNickname) async {
+  Future<void> updateName(String name) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;
     await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
-        .update({'nickname': newNickname});
+        .update({'name': name});
+  }
+
+  String generateRandomNickname() {
+    final random = Random();
+    final prefix = ApiConstants.nicknamePrefixes[random.nextInt(ApiConstants.nicknamePrefixes.length)];
+    final number = (100 + random.nextInt(900)).toString(); // 100 ~ 999
+    return '$prefix$number';
   }
 
   Future<void> updateAvatarUrl(String imageUrl) async {

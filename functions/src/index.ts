@@ -7,6 +7,14 @@ import {onRequest} from "firebase-functions/https";
 admin.initializeApp();
 setGlobalOptions({region: "asia-northeast3"});
 
+const siteSlugMap: Record<string, string> = {
+    "탄천": "tancheon",
+    "중랑천": "jungnang",
+    "안양천": "anyang",
+    "한강": "hangang",
+    "선유": "sunyu",
+};
+
 export const scheduledFetchAndResolveBets = onSchedule("20 * * * *", async () => {
     try {
         // ① 수온 데이터 수집 및 저장
@@ -61,14 +69,6 @@ export async function fetchWaterData(): Promise<void> {
     );
 
     if (filtered.length === 0) throw new Error(`${targetHourStr} 시각의 데이터 없음`);
-
-    const siteSlugMap: Record<string, string> = {
-        "탄천": "tancheon",
-        "중랑천": "jungnang",
-        "안양천": "anyang",
-        "한강": "hangang",
-        "선유": "sunyu",
-    };
 
     const type_id = "water_temp";
     const type_name = "수온";
@@ -165,16 +165,25 @@ export const placeBet = onRequest(async (req, res) => {
             .collection("entries")
             .doc(uid);
 
+        let userName = '';
+        let avatarUrl = '';
+        let bet: any = null;
+        let refundAmount = 0;
+        let question = '';
+
         // ✅ 취소 처리
         if (cancel) {
             await db.runTransaction(async (tx) => {
                 const betSnap = await tx.get(betRef);
                 const userSnap = await tx.get(userRef);
+                const userData = userSnap.data();
+                userName = userData?.name ?? "";
+                avatarUrl = userData?.avatarUrl ?? "";
 
                 if (!betSnap.exists) throw new Error("❌ 베팅 정보 없음");
 
-                const bet = betSnap.data()!;
-                const refundAmount = Math.floor(bet.amount * 0.85);
+                bet = betSnap.data()!;
+                refundAmount = Math.floor(bet.amount * 0.85);
                 const currentPoints = userSnap.data()?.points ?? 0;
 
                 const marketRef = db.collection("measurements").doc(`${site_id}_${type_id}`);
@@ -210,6 +219,15 @@ export const placeBet = onRequest(async (req, res) => {
                 });
             });
 
+            await db.collection('activity').add({
+                type: 'cancel',
+                uid,
+                name: userName,
+                avatarUrl,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                message: `❎ <strong>${bet.question}</strong> — <point>${bet.amount}P</point> 베팅을 취소해 <point>${refundAmount}P</point> 환불 받았어요`,
+            });
+
             res.status(200).send("🪙 베팅 취소 완료 (15% 수수료 제외)");
             return;
         }
@@ -241,9 +259,9 @@ export const placeBet = onRequest(async (req, res) => {
             }
 
             const userData = userSnap.data();
-            const userName = userData?.name ?? "";
-            const avatarUrl = userData?.avatarUrl ?? "";
-            const question = marketSnap.data()?.question ?? "";
+            userName = userData?.name ?? "";
+            avatarUrl = userData?.avatarUrl ?? "";
+            question = marketSnap.data()?.question ?? "";
 
             const isUp = direction === "up";
             const fieldToIncrement = isUp ? "totalUpAmount" : "totalDownAmount";
@@ -286,6 +304,18 @@ export const placeBet = onRequest(async (req, res) => {
                     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
                 });
             }
+        });
+
+        // ⬇️ 트랜잭션 이후 활동 로그 작성
+        await db.collection("activity").add({
+            type: "bet",
+            uid,
+            name: userName,
+            avatarUrl,
+            site_id,
+            type_id,
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            message: `🌀 ${question} (<highlight>${siteSlugMap[site_id]}</highlight>)\n🎯 <point>${amount}P</point> 베팅 → <${direction === 'up' ? 'dir_up' : 'dir_down'}>${direction === 'up' ? '상승' : '하락'}</${direction === 'up' ? 'dir_up' : 'dir_down'}> 예측`,
         });
 
         res.status(200).send("✅ 베팅 성공");
@@ -350,6 +380,24 @@ export async function settleBets({
 
     await batch.commit();
     console.log(`✅ ${site_id}_${type_id} 베팅 정산 완료 (${isUp ? '상승' : '하락'})`);
+
+    // ✅ summary 값만 초기화
+    const summaryRef = db
+        .collection("bets")
+        .doc(`${site_id}_${type_id}`)
+        .collection("summary")
+        .doc("totals");
+
+    try {
+        await summaryRef.set({
+            totalUpAmount: 0,
+            totalDownAmount: 0,
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        }, {merge: true}); // 문서가 있으면 유지, 없으면 생성
+        console.log(`🧹 summary 값 초기화 완료: ${site_id}_${type_id}`);
+    } catch (e) {
+        console.error(`❗ summary 초기화 실패:`, (e as Error).message);
+    }
 
     for (const [uid, resultLines] of Object.entries(resultsByUser)) {
         try {
@@ -470,10 +518,15 @@ export const purchaseRandomArtwork = onRequest(async (req, res) => {
 
         const POINT_COST = 500;
 
+        let userName = '';
+        let avatarUrl = '';
+
         const result = await db.runTransaction(async (tx) => {
             const userRef = db.collection('users').doc(uid);
             const userSnap = await tx.get(userRef);
             const userData: any = userSnap.data();
+            userName = userData?.name ?? "";
+            avatarUrl = userData?.avatarUrl ?? "";
 
             if (!userSnap.exists || (userData?.points ?? 0) < POINT_COST) {
                 throw new Error('Insufficient points');
@@ -514,6 +567,15 @@ export const purchaseRandomArtwork = onRequest(async (req, res) => {
                 artwork: artworkData,
                 remainingPoints: userData.points - POINT_COST,
             };
+        });
+
+        await db.collection('activity').add({
+            type: 'artwork',
+            uid,
+            name: userName,
+            avatarUrl,
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            message: `🖼️ <strong>${result.artwork.prdct_nm_korean}</strong> 작품을 소장했어요`,
         });
 
         res.status(200).json(result);
@@ -583,6 +645,8 @@ export const purchaseArtwork = onRequest(async (req, res) => {
         }
 
         const userData = userSnap.data()!;
+        const userName = userData.name ?? '';
+        const avatarUrl = userData.avatarUrl ?? '';
         const artworkData = artworkSnap.data()!;
         const userPoints = userData.points ?? 0;
         const price = artworkData.price ?? 800;
@@ -604,6 +668,16 @@ export const purchaseArtwork = onRequest(async (req, res) => {
         });
 
         await batch.commit();
+
+        // ✅ 활동 로그 추가
+        await db.collection('activity').add({
+            type: 'artwork',
+            uid,
+            name: userName,
+            avatarUrl,
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            message: `🖼️ <strong>${artworkData.prdct_nm_korean}</strong> 작품을 소장했어요`,
+        });
 
         res.status(200).json({
             success: true,
