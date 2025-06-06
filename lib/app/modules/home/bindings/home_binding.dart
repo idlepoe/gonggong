@@ -14,6 +14,5 @@ class HomeBinding extends Bindings {
     Get.put<BetController>(BetController());
     Get.put<GachaController>(GachaController());
     Get.put<RankingController>(RankingController());
-    Get.put<ProfileController>(ProfileController());
   }
 }

@@ -54,4 +54,33 @@ class ApiService {
       rethrow;
     }
   }
+
+  Future<dynamic> purchaseRandomArtwork() async {
+    try {
+      final res = await dio.post(
+        ApiConstants.purchaseRandomArtwork,
+      );
+
+      return res.data;
+    } catch (e) {
+      logger.e("❌ purchaseRandomArtwork error: $e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> purchaseArtwork(artworkId) async {
+    try {
+      final res = await dio.post(
+        ApiConstants.purchaseArtwork,
+        data: {
+          "artworkId": artworkId, // String
+        },
+      );
+
+      return res.data;
+    } catch (e) {
+      logger.e("❌ purchaseArtwork error: $e");
+      rethrow;
+    }
+  }
 }

@@ -34,6 +34,16 @@ export const fetchWaterSnapshot = onRequest(async (req, res) => {
     }
 });
 
+export const syncSeoulMuseumGachaManual = onRequest(async (req, res) => {
+    try {
+        await performSeoulMuseumGachaSync();
+        res.status(200).send("✅ 수동 동기화 완료");
+    } catch (error) {
+        console.error("❌ 수동 동기화 실패:", error);
+        res.status(500).send("동기화 실패");
+    }
+});
+
 export async function fetchWaterData(): Promise<void> {
     const API_KEY = "53574b6e7069646c3631646b4a4e53";
     const url = `http://openapi.seoul.go.kr:8088/${API_KEY}/json/WPOSInformationTime/1/10`;
@@ -332,3 +342,221 @@ export async function settleBets({
         }
     }
 }
+
+export const syncSeoulMuseumGacha = onSchedule(
+    {
+        schedule: "0 9 1 * *", // 매월 1일 오전 9시
+        timeZone: "Asia/Seoul",
+    },
+    async () => {
+        await performSeoulMuseumGachaSync();
+    }
+);
+
+async function performSeoulMuseumGachaSync() {
+    const db = admin.firestore();
+
+    const API_KEY = '53574b6e7069646c3631646b4a4e53';
+    const API_BASE = `http://openapi.seoul.go.kr:8088/${API_KEY}/json/SemaPsgudInfoKorInfo`;
+    const BATCH_SIZE = 1000;
+
+    try {
+        // 전체 개수 조회
+        const totalRes = await axios.get(`${API_BASE}/1/1`);
+        const totalCount = totalRes.data.SemaPsgudInfoKorInfo.list_total_count;
+        const pages = Math.ceil(totalCount / BATCH_SIZE);
+        console.log(`🎨 총 작품 수: ${totalCount}, 페이지 수: ${pages}`);
+
+        for (let i = 0; i < pages; i++) {
+            const start = i * BATCH_SIZE + 1;
+            const end = Math.min((i + 1) * BATCH_SIZE, totalCount);
+
+            const url = `${API_BASE}/${start}/${end}`;
+            console.log(`📦 요청 중: ${url}`);
+
+            const response = await axios.get(url);
+            const rows = response.data.SemaPsgudInfoKorInfo.row;
+
+            if (!rows || rows.length === 0) {
+                console.log(`⚠️ ${start} ~ ${end} 데이터 없음`);
+                continue;
+            }
+
+            const batch = db.batch();
+            for (const item of rows) {
+                const id = `${item.manage_no_year ?? 'unknown'}_${item.prdct_nm_korean ?? 'unknown'}`
+                    .replace(/ /g, '_');
+                const docRef = db.collection('artworks').doc(id);
+                const price = calculateArtworkPrice(item);
+
+                batch.set(docRef, {
+                    ...item,
+                    price: price,
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                }, {merge: true});
+            }
+
+            await batch.commit();
+            console.log(`✅ 저장 완료: ${start} ~ ${end}`);
+        }
+
+        console.log('🎉 서울시립미술관 작품 전체 동기화 완료!');
+    } catch (error) {
+        console.error('❌ 동기화 실패:', (error as Error).message);
+    }
+}
+
+export const purchaseRandomArtwork  = onRequest(async (req, res) => {
+    try {
+        const db = admin.firestore();
+
+        const authToken = req.headers.authorization?.split('Bearer ')[1];
+        if (!authToken) {
+            res.status(401).json({error: 'Unauthorized: Missing auth token'});
+            return;
+        }
+
+        const decoded = await admin.auth().verifyIdToken(authToken);
+        const uid = decoded.uid;
+
+        const POINT_COST = 500;
+
+        const result = await db.runTransaction(async (tx) => {
+            const userRef = db.collection('users').doc(uid);
+            const userSnap = await tx.get(userRef);
+            const userData: any = userSnap.data();
+
+            if (!userSnap.exists || (userData?.points ?? 0) < POINT_COST) {
+                throw new Error('Insufficient points');
+            }
+
+            const artworksSnap = await db.collection('artworks').get();
+            const allArtworks = artworksSnap.docs;
+
+            if (allArtworks.length === 0) {
+                throw new Error('No artworks available');
+            }
+
+            const randomDoc = allArtworks[Math.floor(Math.random() * allArtworks.length)];
+            const artworkId = randomDoc.id;
+            const artworkData = randomDoc.data();
+
+            const userArtworkRef = userRef.collection('artworks').doc(artworkId);
+            const userArtworkSnap = await tx.get(userArtworkRef);
+
+            tx.update(userRef, {
+                points: admin.firestore.FieldValue.increment(-POINT_COST),
+            });
+
+            if (userArtworkSnap.exists) {
+                tx.update(userArtworkRef, {
+                    count: admin.firestore.FieldValue.increment(1),
+                    lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+                });
+            } else {
+                tx.set(userArtworkRef, {
+                    ownedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    count: 1,
+                });
+            }
+
+            return {
+                artworkId,
+                artwork: artworkData,
+                remainingPoints: userData.points - POINT_COST,
+            };
+        });
+
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('❌ Gacha failed:', (error as Error).message);
+        res.status(500).json({error: (error as Error).message});
+    }
+});
+
+function calculateArtworkPrice(artwork: any): number {
+    const input = `${artwork.prdct_nm_korean}_${artwork.writr_nm}_${artwork.mnfct_year}_${artwork.prdct_stndrd}`;
+    let hash = 0;
+    for (let i = 0; i < input.length; i++) {
+        hash = (hash * 31 + input.charCodeAt(i)) >>> 0; // 32bit 안전한 해시
+    }
+    const min = 800;
+    const max = 5000;
+    return min + (hash % (max - min));
+}
+
+export const purchaseArtwork = onRequest(async (req, res) => {
+    try {
+        if (req.method !== 'POST') {
+            res.status(405).send('Method Not Allowed');
+            return;
+        }
+
+        const { uid, artworkId } = req.body;
+
+        if (!uid || !artworkId) {
+            res.status(400).json({ error: 'uid와 artworkId는 필수입니다.' });
+            return;
+        }
+
+        const db = admin.firestore();
+        const userRef = db.collection('users').doc(uid);
+        const artworkRef = db.collection('artworks').doc(artworkId);
+        const ownedArtworkRef = userRef.collection('artworks').doc(artworkId); // ✅ 서브컬렉션
+
+        const [userSnap, artworkSnap, ownedSnap] = await Promise.all([
+            userRef.get(),
+            artworkRef.get(),
+            ownedArtworkRef.get(),
+        ]);
+
+        if (!userSnap.exists) {
+            res.status(404).json({ error: '유저 정보가 없습니다.' });
+            return;
+        }
+
+        if (!artworkSnap.exists) {
+            res.status(404).json({ error: '작품 정보가 없습니다.' });
+            return;
+        }
+
+        if (ownedSnap.exists) {
+            res.status(409).json({ error: '이미 소장한 작품입니다.' });
+            return;
+        }
+
+        const userData = userSnap.data()!;
+        const artworkData = artworkSnap.data()!;
+        const userPoints = userData.points ?? 0;
+        const price = artworkData.price ?? 800;
+
+        if (userPoints < price) {
+            res.status(400).json({ error: '포인트가 부족합니다.' });
+            return;
+        }
+
+        const batch = db.batch();
+
+        // ✅ 작품 소유 정보 추가 (서브컬렉션)
+        batch.set(ownedArtworkRef, {
+            count: 1,
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+
+        // 포인트 차감
+        batch.update(userRef, {
+            points: admin.firestore.FieldValue.increment(-price),
+        });
+
+        await batch.commit();
+
+        res.status(200).json({
+            success: true,
+            newPoints: userPoints - price,
+            message: '작품을 성공적으로 소장했습니다.',
+        });
+    } catch (error) {
+        console.error('🔥 Error purchasing artwork:', error);
+        res.status(500).json({ error: '서버 오류가 발생했습니다.' });
+    }
+});

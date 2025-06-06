@@ -12,6 +12,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import 'app/data/constants/app_translations.dart';
 import 'app/data/constants/theme.dart';
+import 'app/data/controllers/profile_controller.dart';
 import 'app/data/controllers/theme_controller.dart';
 import 'app/data/utils/fcm.dart';
 import 'app/routes/app_pages.dart';
@@ -23,6 +24,7 @@ Future<void> main() async {
   await initializeNotification();
   await initializeDateLocale();
   final themeController = Get.put(ThemeController());
+  Get.put(ProfileController());
   await themeController.loadTheme();
 
   runApp(

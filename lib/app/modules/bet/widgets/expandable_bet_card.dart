@@ -22,7 +22,7 @@ class ExpandableBetCard extends StatefulWidget {
 class _ExpandableBetCardState extends State<ExpandableBetCard> {
   bool expanded = false;
   bool bettingUp = true;
-  double amount = 10;
+  double amount = 100;
   late final TextEditingController _controller;
 
   @override
@@ -278,10 +278,20 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
         const SizedBox(height: 12),
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
-            trackHeight: 4,
-            inactiveTrackColor: Colors.grey.shade200,
-            activeTrackColor: Colors.blue,
-            thumbColor: Colors.blue,
+            activeTrackColor: Colors.lightBlue,
+            // 슬라이더 이동된 부분 색상
+            inactiveTrackColor: Colors.lightBlue[100],
+            // 이동되지 않은 부분 색상
+            thumbColor: Colors.lightBlue,
+            // 손잡이 색상
+            overlayColor: Colors.lightBlue.withOpacity(0.2),
+            // 손잡이 터치 시 주변 원
+            valueIndicatorColor: Colors.lightBlue,
+            // label 배경색
+            valueIndicatorTextStyle: const TextStyle(
+              color: Colors.white, // label 텍스트 색상
+              fontWeight: FontWeight.bold,
+            ),
           ),
           child: Slider(
             value: amount,
@@ -289,7 +299,6 @@ class _ExpandableBetCardState extends State<ExpandableBetCard> {
             max: 100,
             divisions: 99,
             label: "${amount.toStringAsFixed(0)}P",
-            thumbColor: Colors.lightBlue,
             onChanged: _updateAmount,
           ),
         ),

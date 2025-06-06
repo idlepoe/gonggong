@@ -51,8 +51,8 @@ class HomeView extends GetView<HomeController> {
                 icon: Text('📈', style: TextStyle(fontSize: 20)),
                 label: '예측'),
             BottomNavigationBarItem(
-                icon: Text('🎁', style: TextStyle(fontSize: 20)),
-                label: 'gacha'),
+                icon: Text('🖼️', style: TextStyle(fontSize: 20)),
+                label: '작품'),
             BottomNavigationBarItem(
                 icon: Text('🏆', style: TextStyle(fontSize: 20)),
                 label: 'ranking'),
