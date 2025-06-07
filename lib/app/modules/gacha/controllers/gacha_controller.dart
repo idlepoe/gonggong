@@ -5,9 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/controllers/profile_controller.dart';
 import '../../../data/models/artwork_model.dart';
 import '../../../data/utils/api_service.dart';
 import '../../../data/utils/logger.dart';
+import '../../../data/widgets/show_app_snackbar.dart';
 
 class GachaController extends GetxController {
   final artworks = <Artwork>[].obs;
@@ -107,17 +109,26 @@ class GachaController extends GetxController {
   bool isOwned(String id) => ownedIds.contains(id);
 
   Future<void> drawGacha() async {
+    // ✅ 포인트 확인
+    final profile = Get.find<ProfileController>().userProfile.value;
+    final currentPoints = profile?.points ?? 0;
+
+    if (currentPoints < 500) {
+      showAppSnackbar('포인트 부족', '가챠를 하기 위해서는 최소 500포인트가 필요해요.');
+      return;
+    }
+
     isLoading.value = true;
     try {
       final newArtwork = await ApiService().purchaseRandomArtwork();
       if (newArtwork != null) {
         logger.w(newArtwork);
         ownedIds.add(newArtwork["artworkId"]);
-        Get.snackbar('🎁 가챠 결과', '${newArtwork["artwork"]["prdct_nm_korean"]} 획득!');
+        showAppSnackbar('🎁 가챠 결과', '${newArtwork["artwork"]["prdct_nm_korean"]} 획득!');
       }
     } catch (e) {
       logger.e(e);
-      Get.snackbar('실패', '가챠 중 오류 발생');
+      showAppSnackbar('실패', '가챠 중 오류 발생');
     } finally {
       isLoading.value = false;
     }
@@ -130,10 +141,10 @@ class GachaController extends GetxController {
       if (result != null && result['artworkId'] != null) {
         final newArtwork = Artwork.fromJson(result['artwork']);
         ownedIds.add(newArtwork.id);
-        Get.snackbar('🎁 가챠 결과', '${newArtwork.nameKr} 획득!');
+        showAppSnackbar('🎁 가챠 결과', '${newArtwork.nameKr} 획득!');
       }
     } catch (e) {
-      Get.snackbar('실패', '가챠 중 오류 발생');
+      showAppSnackbar('실패', '가챠 중 오류 발생');
     } finally {
       isLoading.value = false;
     }
@@ -145,10 +156,10 @@ class GachaController extends GetxController {
       final result = await ApiService().purchaseArtwork(artwork.id);
       if (result != null && result['success'] == true) {
         ownedIds.add(artwork.id);
-        Get.snackbar('🎉 구매 완료', '${artwork.nameKr}를 소장했습니다!');
+        showAppSnackbar('🎉 구매 완료', '${artwork.nameKr}를 소장했습니다!');
       }
     } catch (e) {
-      Get.snackbar('실패', '작품 구매 중 오류 발생');
+      showAppSnackbar('실패', '작품 구매 중 오류 발생');
     } finally {
       isLoading.value = false;
     }

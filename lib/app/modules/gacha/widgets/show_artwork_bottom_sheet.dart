@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gonggong/app/data/widgets/show_app_snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../data/controllers/profile_controller.dart';
@@ -76,7 +77,7 @@ void showArtworkBottomSheet(
                         onPressed: () {
                           final profileController = Get.find<ProfileController>();
                           profileController.updateAvatarUrl(artwork.mainImage);
-                          Get.snackbar('🙌 완료', '프로필 사진이 변경되었습니다!');
+                          showAppSnackbar('🙌 완료', '프로필 사진이 변경되었습니다!');
                         },
                         icon: const Icon(Icons.account_circle, size: 20),
                         label: const Text("내 아바타로"),

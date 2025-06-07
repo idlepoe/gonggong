@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:gonggong/app/data/widgets/button_loading.dart';
+import '../../../data/controllers/profile_controller.dart';
 import '../../../data/models/bet.dart';
 import '../../../data/models/measurement_info.dart';
+import '../../../data/utils/logger.dart';
 import '../../../data/widgets/build_linkable_question.dart';
+import '../../../data/widgets/show_app_snackbar.dart';
 import '../controllers/bet_card_stats_controller.dart';
 import '../controllers/bet_controller.dart';
 import 'bet_card_collapsed.dart';
@@ -46,7 +49,6 @@ class _BetCardState extends State<BetCard> {
   }
 
   void _updateAmount(double value) {
-    if (value > 100) value = 100;
     setState(() {
       amount = value;
       _controller.text = value.toStringAsFixed(0);
@@ -54,9 +56,19 @@ class _BetCardState extends State<BetCard> {
   }
 
   void toggle(bool up) {
+    final profileController = Get.find<ProfileController>();
+    final currentPoints = profileController.userPoints;
+    if (currentPoints == 0) {
+      showAppSnackbar("베팅 실패", "포인트가 부족합니다. 현재 보유: $currentPoints P");
+      return;
+    }
+
+    final maxBetAmount = profileController.maxBetAmount;
     setState(() {
       bettingUp = up;
       expanded = true;
+      amount = maxBetAmount;
+      _controller.text = maxBetAmount.toStringAsFixed(0);
     });
   }
 
@@ -71,75 +83,91 @@ class _BetCardState extends State<BetCard> {
     final info = widget.info;
     final myBet = info.myBet;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      padding: const EdgeInsets.all(12),
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// 상단 아이콘 + 질문 + 미니차트
-          BetCardHeader(info: info),
-          const SizedBox(height: 12),
+    return GestureDetector(
+      onTap: () {},
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.all(12),
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// 상단 아이콘 + 질문 + 미니차트
+            BetCardHeader(info: info),
+            const SizedBox(height: 12),
 
-          /// 확장 여부에 따라 폼/요약/선택 버튼 스위칭
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            transitionBuilder: (child, animation) =>
-                SizeTransition(sizeFactor: animation, child: child),
-            child: expanded
-                ? BetCardForm(
-                    info: info,
-                    controller: _controller,
-                    amount: amount,
-                    bettingUp: bettingUp,
-                    color: bettingUp ? Colors.green : Colors.red,
-                    label: bettingUp ? "오를 것 같아" : "내릴 것 같아",
-                    onAmountChanged: _updateAmount,
-                    onClose: collapse,
-                    onSubmit: () async {
-                      final user = FirebaseAuth.instance.currentUser;
-                      if (user == null) return;
+            /// 확장 여부에 따라 폼/요약/선택 버튼 스위칭
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) =>
+                  SizeTransition(sizeFactor: animation, child: child),
+              child: expanded
+                  ? BetCardForm(
+                      info: info,
+                      controller: _controller,
+                      amount: amount,
+                      bettingUp: bettingUp,
+                      color: bettingUp
+                          ? Colors.green.shade100
+                          : Colors.red.shade100,
+                      label: bettingUp ? "오를 것 같아" : "내릴 것 같아",
+                      onAmountChanged: _updateAmount,
+                      onClose: collapse,
+                      onSubmit: () async {
+                        final user = FirebaseAuth.instance.currentUser;
+                        if (user == null) return;
 
-                      final bet = Bet(
-                        uid: user.uid,
-                        site_id: info.site_id,
-                        type_id: info.type_id,
-                        direction: bettingUp ? 'up' : 'down',
-                        amount: amount,
-                        odds: 2.1,
-                        userName: user.displayName,
-                        avatarUrl: user.photoURL,
-                        question: info.question,
-                        createdAt: DateTime.now(),
-                      );
+                        final stats = Get.find<BetCardStatsController>()
+                            .getStats(info.site_id, info.type_id);
 
-                      await Get.find<BetController>().placeBet(bet);
-                      collapse();
-                    },
-                  )
-                : myBet != null
-                    ? BetCardSummary(
-                        bet: myBet,
-                        onCancel: collapse,
-                      )
-                    : BetCardCollapsed(
-                        info: widget.info,
-                        onUpPressed: () => toggle(true),
-                        onDownPressed: () => toggle(false),
-                      ),
-          ),
+                        final rate = bettingUp
+                            ? stats?.upRate ?? 0.5
+                            : stats?.downRate ?? 0.5;
 
-          const SizedBox(height: 12),
+                        // 간단한 배당 계산 예시
+                        final odds =
+                            rate > 0 ? (1 / rate).clamp(1.1, 10.0) : 2.0;
 
-          /// 타이머 + 즐겨찾기
-          BetCardFooter(info: info),
-        ],
+                        final bet = Bet(
+                          uid: user.uid,
+                          site_id: info.site_id,
+                          type_id: info.type_id,
+                          direction: bettingUp ? 'up' : 'down',
+                          amount: amount,
+                          odds: odds,
+                          userName: user.displayName,
+                          avatarUrl: user.photoURL,
+                          question: info.question,
+                          createdAt: DateTime.now(),
+                        );
+
+                        await Get.find<BetController>().placeBet(bet);
+                        collapse();
+                      },
+                    )
+                  : myBet != null
+                      ? BetCardSummary(
+                          bet: myBet,
+                          onCancel: collapse,
+                        )
+                      : BetCardCollapsed(
+                          info: widget.info,
+                          onUpPressed: () => toggle(true),
+                          onDownPressed: () => toggle(false),
+                        ),
+            ),
+
+            const SizedBox(height: 12),
+
+            /// 타이머 + 즐겨찾기
+            BetCardFooter(info: info),
+          ],
+        ),
       ),
     );
   }

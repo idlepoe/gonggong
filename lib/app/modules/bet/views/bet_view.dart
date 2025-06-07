@@ -25,6 +25,7 @@ class BetView extends GetView<BetController> {
         final dustLevelInfos =
             allInfos.where((e) => e.type_id == 'dust_level').toList();
         return CustomScrollView(
+          physics: BouncingScrollPhysics(),
           slivers: [
             SliverStickyHeader(
               header: _buildHeader(

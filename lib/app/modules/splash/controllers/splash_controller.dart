@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../../../data/constants/api_constants.dart';
+import '../../../data/widgets/show_app_snackbar.dart';
 import '../../../routes/app_pages.dart';
 
 class SplashController extends GetxController {
@@ -28,7 +29,7 @@ class SplashController extends GetxController {
         _signInAnonymously();
       }
     } catch (e) {
-      Get.snackbar("오류", "로그인 실패: $e");
+      showAppSnackbar("오류", "로그인 실패: $e");
     }
   }
 

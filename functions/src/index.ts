@@ -17,9 +17,12 @@ const siteSlugMap: Record<string, string> = {
 
 export const scheduledFetchAndResolveBets = onSchedule("25 * * * *", async () => {
     try {
-        // ① 수온 데이터 수집 및 저장
-        await fetchWaterData(); // ✅ docId + data 반환
+        // 수온 데이터 수집 및 저장
+        await fetchWaterData();
+        // 미세 먼지 데이터 수집 및 저장
         await fetchDustLevel();
+
+        await sendBetPushManually();
     } catch (e) {
         logger.error("📛 scheduledFetchAndResolveBets 실패", e);
     }
@@ -104,7 +107,7 @@ export async function fetchWaterData(): Promise<void> {
         const startDate = new Date(
             `${row.MSR_DATE.slice(0, 4)}-${row.MSR_DATE.slice(4, 6)}-${row.MSR_DATE.slice(6, 8)}T${row.MSR_TIME}:00+09:00`
         );
-        const endDate = new Date(startDate.getTime() + 80 * 60 * 1000);
+        const endDate = new Date(startDate.getTime() + 85 * 60 * 1000);
 
         const parentDocId = `${site_id}_${type_id}`;
         const valueDocId = `${row.MSR_DATE}${row.MSR_TIME.replace(":", "")}`;
@@ -192,7 +195,7 @@ export async function fetchDustLevel(): Promise<void> {
         const value = parseFloat(row.PM10);
 
         const startDate = new Date(`${row.MSRDATE.slice(0, 4)}-${row.MSRDATE.slice(4, 6)}-${row.MSRDATE.slice(6, 8)}T${row.MSRDATE.slice(8, 10)}:00:00+09:00`);
-        const endDate = new Date(startDate.getTime() + 80 * 60 * 1000);
+        const endDate = new Date(startDate.getTime() + 85 * 60 * 1000);
 
         const parentDocId = `${site_id}_${type_id}`;
         const valueDocId = row.MSRDATE;
@@ -230,7 +233,7 @@ export async function fetchDustLevel(): Promise<void> {
             question,
             interval,
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        }, { merge: true });
+        }, {merge: true});
 
         batch.set(valueRef, {
             name: site_name,
@@ -448,14 +451,6 @@ export async function settleBets({
     const batch = db.batch();
     const isUp = currentValue > previousValue;
 
-    const summaryByUser: {
-        [uid: string]: {
-            winCount: number;
-            loseCount: number;
-            totalReward: number;
-        };
-    } = {};
-
     for (const doc of betSnap.docs) {
         const bet = doc.data();
         const userRef = db.collection('users').doc(bet.uid);
@@ -479,24 +474,10 @@ export async function settleBets({
         // 기존 베팅 제거
         batch.delete(doc.ref);
 
-        // 푸시메시지 필요 데이터 정리
-        if (!summaryByUser[bet.uid]) {
-            summaryByUser[bet.uid] = {
-                winCount: 0,
-                loseCount: 0,
-                totalReward: 0,
-            };
-        }
-
         if (won) {
-            summaryByUser[bet.uid].winCount += 1;
-            summaryByUser[bet.uid].totalReward += reward;
-
             batch.update(userRef, {
                 points: admin.firestore.FieldValue.increment(reward),
             });
-        } else {
-            summaryByUser[bet.uid].loseCount += 1;
         }
     }
 
@@ -519,36 +500,6 @@ export async function settleBets({
         console.log(`🧹 summary 값 초기화 완료: ${site_id}_${type_id}`);
     } catch (e) {
         console.error(`❗ summary 초기화 실패:`, (e as Error).message);
-    }
-
-    for (const [uid, summary] of Object.entries(summaryByUser)) {
-        try {
-            const { winCount, loseCount, totalReward } = summary;
-
-            const summaryLine = `📊 결과 요약\n✅ ${winCount}승  ❌ ${loseCount}패\n💰 획득: ${totalReward}P`;
-
-            await admin.messaging().send({
-                topic: `user_${uid}`,
-                notification: {
-                    title: '베팅 결과 요약이 도착했어요!',
-                    body: summaryLine,
-                },
-                android: {
-                    notification: {
-                        tag: `bet_result_${uid}_${Date.now()}`,
-                    },
-                },
-            });
-
-            console.log(
-                `📬 푸시 전송 완료 → uid: ${uid}'}`
-            );
-        } catch (error) {
-            console.error(
-                `❗️푸시 전송 실패 (uid: ${uid}):`,
-                (error as Error).message
-            );
-        }
     }
 }
 
@@ -801,3 +752,91 @@ export const purchaseArtwork = onRequest(async (req, res) => {
         res.status(500).json({error: '서버 오류가 발생했습니다.'});
     }
 });
+
+async function sendBetPushManually() {
+    try {
+        const db = admin.firestore();
+
+        const now = admin.firestore.Timestamp.now();
+        const fiveMinutesAgo = admin.firestore.Timestamp.fromMillis(now.toMillis() - 5 * 60 * 1000);
+
+        const snap = await db
+            .collection("bets_history")
+            .where("settledAt", ">=", fiveMinutesAgo)
+            .get();
+
+        // 필드 pushed가 true가 아닌 것만 필터링
+        const targetDocs = snap.docs.filter(doc => doc.get("pushed") !== true);
+
+        const summaryByUser: {
+            [uid: string]: {
+                winCount: number;
+                loseCount: number;
+                totalReward: number;
+                totalAmount: number; // ✅ 추가
+                docIds: string[];
+            };
+        } = {};
+
+        for (const doc of targetDocs) {
+            const data = doc.data();
+            const uid = data.uid;
+            const reward = Math.floor((data.amount ?? 0) * (data.odds ?? 0));
+
+            if (!summaryByUser[uid]) {
+                summaryByUser[uid] = {
+                    winCount: 0,
+                    loseCount: 0,
+                    totalReward: 0,
+                    totalAmount: 0,
+                    docIds: [],
+                };
+            }
+
+            summaryByUser[uid].docIds.push(doc.id);
+            summaryByUser[uid].totalAmount += data.amount ?? 0; // ✅ 총 베팅액 누적
+
+            if (data.result === "win") {
+                summaryByUser[uid].winCount += 1;
+                summaryByUser[uid].totalReward += reward;
+            } else {
+                summaryByUser[uid].loseCount += 1;
+            }
+        }
+
+        for (const [uid, summary] of Object.entries(summaryByUser)) {
+            const {winCount, loseCount, totalReward, totalAmount, docIds} = summary;
+
+            const summaryLine = `📊 결과 요약\n✅ ${winCount}승  ❌ ${loseCount}패\n💰 획득: ${totalReward}P\n🎯 총 베팅액: ${totalAmount}P`;
+
+            try {
+                await admin.messaging().send({
+                    topic: `user_${uid}`,
+                    notification: {
+                        title: "베팅 결과 요약이 도착했어요!",
+                        body: summaryLine,
+                    },
+                    android: {
+                        notification: {
+                            tag: `bet_result_${uid}_${Date.now()}`,
+                        },
+                    },
+                });
+
+                // pushed: true 마킹
+                const batch = db.batch();
+                for (const docId of docIds) {
+                    const ref = db.collection("bets_history").doc(docId);
+                    batch.update(ref, {pushed: true});
+                }
+                await batch.commit();
+
+                console.log(`📬 푸시 전송 완료 → uid: ${uid}`);
+            } catch (err) {
+                console.error(`❌ 푸시 전송 실패 → uid: ${uid}`, (err as Error).message);
+            }
+        }
+    } catch (error) {
+        console.error("❗️푸시 전송 처리 중 에러 발생:", (error as Error).message);
+    }
+}

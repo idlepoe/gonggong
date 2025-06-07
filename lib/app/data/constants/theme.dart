@@ -59,6 +59,16 @@ class AppThemes {
         bodyMedium: TextStyle(fontSize: 14, color: AppColors.textSecondary),
         labelSmall: TextStyle(fontSize: 12, color: AppColors.textSecondary),
       ),
+      sliderTheme: SliderThemeData(
+        activeTrackColor: AppColors.accentBlue,
+        inactiveTrackColor: Colors.grey[300],
+        thumbColor: AppColors.accentBlue,
+        overlayColor: AppColors.accentBlue.withOpacity(0.2),
+        trackHeight: 4,
+        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10),
+        overlayShape: RoundSliderOverlayShape(overlayRadius: 20),
+        valueIndicatorColor: AppColors.accentBlue,
+      ),
     );
   }
 
@@ -116,6 +126,16 @@ class AppThemes {
         bodyLarge: TextStyle(fontSize: 16, color: AppColors.darkTextPrimary),
         bodyMedium: TextStyle(fontSize: 14, color: AppColors.darkTextSecondary),
         labelSmall: TextStyle(fontSize: 12, color: AppColors.darkTextSecondary),
+      ),
+      sliderTheme: SliderThemeData(
+        activeTrackColor: Colors.tealAccent,
+        inactiveTrackColor: Colors.grey[700],
+        thumbColor: Colors.tealAccent,
+        overlayColor: Colors.tealAccent.withOpacity(0.2),
+        trackHeight: 4,
+        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10),
+        overlayShape: RoundSliderOverlayShape(overlayRadius: 20),
+        valueIndicatorColor: Colors.teal,
       ),
     );
   }

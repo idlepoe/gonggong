@@ -6,11 +6,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/controllers/profile_controller.dart';
 import '../../../data/models/bet.dart';
 import '../../../data/models/measurement_info.dart';
 import '../../../data/models/measurement_value.dart';
 import '../../../data/utils/api_service.dart';
 import '../../../data/utils/logger.dart';
+import '../../../data/widgets/show_app_snackbar.dart';
 
 class BetController extends GetxController {
   final measurementInfos = <String, MeasurementInfo>{}.obs;
@@ -134,6 +136,15 @@ class BetController extends GetxController {
       if (isLoading.value) return; // 중복 클릭 방지
       isLoading.value = true;
 
+      // ✅ 포인트 확인
+      final profile = Get.find<ProfileController>().userProfile.value;
+      final currentPoints = profile?.points ?? 0;
+
+      if (currentPoints < bet.amount) {
+        showAppSnackbar("베팅 실패", "포인트가 부족합니다. 현재 보유: $currentPoints P");
+        return;
+      }
+
       await ApiService().placeBetWithModel(bet);
 
       // ✅ topic 구독
@@ -141,10 +152,10 @@ class BetController extends GetxController {
           "${bet.site_id}_${bet.type_id}_${_resolveBetKey(bet.createdAt)}";
       await FirebaseMessaging.instance.subscribeToTopic(topic);
 
-      Get.snackbar("베팅 완료", "${bet.amount.toInt()}포인트 베팅 성공!");
+      showAppSnackbar("베팅 완료", "${bet.amount.toInt()}포인트 베팅 성공!");
       // 필요시 포인트 또는 베팅 목록 갱신
     } catch (e) {
-      Get.snackbar("베팅 실패", e.toString());
+      showAppSnackbar("베팅 실패", e.toString());
     } finally {
       isLoading.value = false;
     }
@@ -167,17 +178,15 @@ class BetController extends GetxController {
 
       logger.i("🪙 ${bet.amount}P 베팅 취소 → ${refund}P 환불");
 
-      Get.snackbar(
+      showAppSnackbar(
         "베팅 취소 완료",
         "$directionLabel 에 걸었던 ${bet.amount.toStringAsFixed(0)}P 중\n수수료 제외 ${refund}P가 환불되었습니다.",
-        snackPosition: SnackPosition.BOTTOM,
       );
     } catch (e) {
       logger.e("❌ 베팅 취소 실패: $e");
-      Get.snackbar(
+      showAppSnackbar(
         "베팅 취소 실패",
         "다시 시도해주세요.",
-        snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
       isLoading.value = false;

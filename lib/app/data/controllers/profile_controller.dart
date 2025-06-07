@@ -10,6 +10,10 @@ import '../models/user_profile.dart';
 
 class ProfileController extends GetxController {
   final Rxn<UserProfile> userProfile = Rxn<UserProfile>();
+
+  // ✅ 반응형 getter
+  int get userPoints => userProfile.value?.points ?? 0;
+
   Timer? _pointTimer;
 
   @override
@@ -92,4 +96,15 @@ class ProfileController extends GetxController {
       }
     });
   }
+
+  // 💡 포인트 기반 베팅 한도 계산
+  double getMaxBet(double points) {
+    final points = userPoints.toDouble();
+    if (points >= 2000) return 1000;
+    if (points >= 1000) return 500;
+    // 보유 포인트가 1000 미만이면 본인의 포인트만큼만 베팅 가능
+    return points.clamp(1, 100);
+  }
+
+  double get maxBetAmount => getMaxBet(userPoints.toDouble());
 }
