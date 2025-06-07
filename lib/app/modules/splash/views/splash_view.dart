@@ -7,9 +7,16 @@ import '../controllers/splash_controller.dart';
 class SplashView extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: CircularProgressIndicator(), // 간단한 로딩 스플래시
+        child: Obx(() => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 16),
+            Text(controller.statusText.value),
+          ],
+        )),
       ),
     );
   }

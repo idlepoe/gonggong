@@ -17,15 +17,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0f3d131-9244-4cc6-a4a2-44627efbea21" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/icon/icon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/constants/theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/constants/theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/controllers/bet_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/controllers/bet_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/views/bet_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/views/bet_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/controllers/home_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/controllers/home_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/views/home_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/views/home_view.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/app/modules/splash/controllers/splash_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/splash/controllers/splash_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/splash/views/splash_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/splash/views/splash_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
