@@ -19,7 +19,7 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _initProfileStream();
+    initProfileStream();
   }
 
   @override
@@ -28,18 +28,18 @@ class ProfileController extends GetxController {
     super.onClose();
   }
 
-  void _initProfileStream() {
+  Future<void> initProfileStream() async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) return;
-
-    final docRef = FirebaseFirestore.instance.collection('users').doc(uid);
-    docRef.snapshots().listen((snapshot) {
-      if (snapshot.exists) {
-        final data = snapshot.data()!;
-        userProfile.value = UserProfile.fromJson({'uid': uid, ...data});
-        _handlePointReward(data['points'] ?? 0);
-      }
-    });
+    if (uid != null) {
+      final docRef = FirebaseFirestore.instance.collection('users').doc(uid);
+      docRef.snapshots().listen((snapshot) {
+        if (snapshot.exists) {
+          final data = snapshot.data()!;
+          userProfile.value = UserProfile.fromJson({'uid': uid, ...data});
+          _handlePointReward(data['points'] ?? 0);
+        }
+      });
+    }
   }
 
   void _handlePointReward(int currentPoints) {
@@ -76,7 +76,8 @@ class ProfileController extends GetxController {
 
   String generateRandomNickname() {
     final random = Random();
-    final prefix = ApiConstants.nicknamePrefixes[random.nextInt(ApiConstants.nicknamePrefixes.length)];
+    final prefix = ApiConstants
+        .nicknamePrefixes[random.nextInt(ApiConstants.nicknamePrefixes.length)];
     final number = (100 + random.nextInt(900)).toString(); // 100 ~ 999
     return '$prefix$number';
   }

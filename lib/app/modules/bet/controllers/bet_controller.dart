@@ -38,47 +38,51 @@ class BetController extends GetxController {
         .collection("measurements")
         .snapshots()
         .listen((snapshot) async {
-      final Map<String, MeasurementInfo> loaded = {};
+      try {
+        final Map<String, MeasurementInfo> loaded = {};
 
-      for (final doc in snapshot.docs) {
-        final data = doc.data();
-        final parentId = doc.id;
+        for (final doc in snapshot.docs) {
+          final data = doc.data();
+          final parentId = doc.id;
 
-        // 🔹 fetch values (서브컬렉션)
-        final valuesSnap = await doc.reference
-            .collection("values")
-            .orderBy("startDate", descending: true)
-            .limit(24)
-            .get();
+          // 🔹 fetch values (서브컬렉션)
+          final valuesSnap = await doc.reference
+              .collection("values")
+              .orderBy("startDate", descending: true)
+              .limit(24)
+              .get();
 
-        final values = valuesSnap.docs
-            .map((v) => MeasurementValue.fromJson(v.data()))
-            .toList();
+          final values = valuesSnap.docs
+              .map((v) => MeasurementValue.fromJson(v.data()))
+              .toList();
 
-        // 🔹 fetch myBet
-        Bet? myBet;
-        final betSnap = await FirebaseFirestore.instance
-            .collection("bets")
-            .doc(parentId)
-            .collection("entries")
-            .doc(uid)
-            .get();
+          // 🔹 fetch myBet
+          Bet? myBet;
+          final betSnap = await FirebaseFirestore.instance
+              .collection("bets")
+              .doc(parentId)
+              .collection("entries")
+              .doc(uid)
+              .get();
 
-        if (betSnap.exists) {
-          myBet = Bet.fromJson(betSnap.data()!);
+          if (betSnap.exists) {
+            myBet = Bet.fromJson(betSnap.data()!);
+          }
+
+          // 🔹 MeasurementInfo 조립
+          final info = MeasurementInfo.fromJson({
+            ...data,
+            'values': values.map((v) => v.toJson()).toList(),
+          }).copyWith(myBet: myBet);
+
+          loaded[parentId] = info;
         }
 
-        // 🔹 MeasurementInfo 조립
-        final info = MeasurementInfo.fromJson({
-          ...data,
-          'values': values.map((v) => v.toJson()).toList(),
-        }).copyWith(myBet: myBet);
-
-        loaded[parentId] = info;
+        measurementInfos.assignAll(loaded);
+        sortMeasurementInfos();
+      } catch (e) {
+        logger.e(e);
       }
-
-      measurementInfos.assignAll(loaded);
-      sortMeasurementInfos();
     });
   }
 
@@ -157,7 +161,9 @@ class BetController extends GetxController {
     } catch (e) {
       showAppSnackbar("베팅 실패", e.toString());
     } finally {
-      isLoading.value = false;
+      Future.delayed(const Duration(seconds: 5), () {
+        isLoading.value = false;
+      });
     }
   }
 
@@ -199,5 +205,9 @@ class BetController extends GetxController {
         "${dt.year}${dt.month.toString().padLeft(2, '0')}${dt.day.toString().padLeft(2, '0')}";
     final hour = dt.hour.toString().padLeft(2, '0');
     return "${date}${hour}00";
+  }
+
+  MeasurementInfo? getInfoById(String betId) {
+    return measurementInfos[betId];
   }
 }

@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../../../data/constants/api_constants.dart';
+import '../../../data/controllers/profile_controller.dart';
 import '../../../data/widgets/show_app_snackbar.dart';
 import '../../../routes/app_pages.dart';
 
@@ -58,6 +59,10 @@ class SplashController extends GetxController {
     FirebaseAuth.instance.currentUser!.updateDisplayName(nickname);
     if (!kIsWeb) {
       FirebaseMessaging.instance.subscribeToTopic('user_$uid');
+    }
+
+    if (Get.isRegistered<ProfileController>()) {
+      Get.find<ProfileController>().initProfileStream();
     }
   }
 }

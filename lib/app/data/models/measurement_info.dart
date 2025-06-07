@@ -44,4 +44,16 @@ abstract class MeasurementInfo with _$MeasurementInfo {
 
   factory MeasurementInfo.fromJson(Map<String, dynamic> json) =>
       _$MeasurementInfoFromJson(json);
+
+  factory MeasurementInfo.empty() => MeasurementInfo(
+        site_id: '',
+        type_id: '',
+        question: '',
+        type_name: '',
+        site_name: '',
+        interval: '',
+        unit: '',
+        updatedAt: DateTime.now(),
+        values: [],
+      );
 }

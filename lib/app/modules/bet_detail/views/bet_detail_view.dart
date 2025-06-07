@@ -3,21 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/bet_detail_controller.dart';
+import '../widgets/BetActionButtons.dart';
+import '../widgets/BetDiscussionSection.dart';
+import '../widgets/BetGraphSection.dart';
+import '../widgets/BetStatsSection.dart';
 
 class BetDetailView extends GetView<BetDetailController> {
-  const BetDetailView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BetDetailView'),
-        centerTitle: true,
+        title: Text("베팅 상세"),
       ),
-      body: const Center(
-        child: Text(
-          'BetDetailView is working',
-          style: TextStyle(fontSize: 20),
-        ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(child: BetGraphSection(betId: controller.betId)),
+          SliverToBoxAdapter(child: BetStatsSection(betId: controller.betId)),
+          SliverToBoxAdapter(child: BetActionButtons()),
+          const SliverToBoxAdapter(
+              child: Divider(
+            color: Colors.grey,
+            indent: 20,
+            endIndent: 20,
+          )),
+          SliverFillRemaining(
+            hasScrollBody: true,
+            child: BetDiscussionSection(betId: controller.betId),
+          ),
+        ],
       ),
     );
   }

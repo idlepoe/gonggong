@@ -29,7 +29,10 @@ export const scheduledFetchAndResolveBets = onSchedule("25 * * * *", async () =>
 });
 
 
-export const fetchWaterManual = onRequest(async (req, res) => {
+export const fetchWaterManual = onRequest({
+    cors: true,
+    region: "asia-northeast3",
+}, async (req, res) => {
     try {
         // ① 수온 데이터 수집 및 저장
         await fetchWaterData(); // ✅ docId + data 반환
@@ -46,7 +49,10 @@ export const fetchWaterManual = onRequest(async (req, res) => {
     }
 });
 
-export const fetchDustLevelManual = onRequest(async (req, res) => {
+export const fetchDustLevelManual = onRequest({
+    cors: true,
+    region: "asia-northeast3",
+}, async (req, res) => {
     try {
         // ① 미세먼지 데이터 수집 및 저장
         await fetchDustLevel(); // ✅ docId + data 반환
@@ -63,7 +69,10 @@ export const fetchDustLevelManual = onRequest(async (req, res) => {
     }
 });
 
-export const syncSeoulMuseumGachaManual = onRequest(async (req, res) => {
+export const syncSeoulMuseumGachaManual = onRequest({
+    cors: true,
+    region: "asia-northeast3",
+}, async (req, res) => {
     try {
         await performSeoulMuseumGachaSync();
         res.status(200).send("✅ 수동 동기화 완료");
@@ -248,7 +257,10 @@ export async function fetchDustLevel(): Promise<void> {
     console.log(`✅ ${filtered.length}개의 미세먼지 데이터 저장 및 정산 완료`);
 }
 
-export const placeBet = onRequest(async (req, res) => {
+export const placeBet = onRequest({
+    cors: true,
+    region: "asia-northeast3",
+}, async (req, res) => {
     try {
         const {
             uid,
@@ -566,7 +578,10 @@ async function performSeoulMuseumGachaSync() {
     }
 }
 
-export const purchaseRandomArtwork = onRequest(async (req, res) => {
+export const purchaseRandomArtwork = onRequest({
+    cors: true,
+    region: "asia-northeast3",
+}, async (req, res) => {
     try {
         const db = admin.firestore();
 

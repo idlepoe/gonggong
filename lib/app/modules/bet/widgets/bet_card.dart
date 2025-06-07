@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:gonggong/app/data/widgets/button_loading.dart';
+import 'package:gonggong/app/modules/bet_detail/controllers/bet_detail_controller.dart';
+import 'package:gonggong/app/modules/bet_detail/views/bet_detail_view.dart';
+import 'package:swipeable_page_route/swipeable_page_route.dart';
 import '../../../data/controllers/profile_controller.dart';
 import '../../../data/models/bet.dart';
 import '../../../data/models/measurement_info.dart';
@@ -84,7 +87,21 @@ class _BetCardState extends State<BetCard> {
     final myBet = info.myBet;
 
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (Get.isRegistered<BetDetailController>()) {
+          Get.delete<BetDetailController>();
+        }
+        Navigator.of(context).push(
+          SwipeablePageRoute(
+            builder: (_) {
+              final betId = "${info.site_id}_${info.type_id}";
+              // 먼저 컨트롤러를 등록 (Get.put)
+              Get.put(BetDetailController(betId));
+              return BetDetailView();
+            },
+          ),
+        );
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.all(12),

@@ -13,14 +13,6 @@ firebase deploy --only hosting
 flutter build appbundle --release
 
 
-get create page session_tab
-get create page tab_track
-get create page tab_search
-get create page tab_favorite
-get create page tab_chat
-get create page tab_setting
-
-
 shorebird release android
 
 

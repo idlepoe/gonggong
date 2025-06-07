@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../../../data/utils/logger.dart';
+
 class DetailedTrendChart extends StatelessWidget {
   final List<FlSpot> spots;
   final List<String> timeLabels;
@@ -42,7 +44,7 @@ class DetailedTrendChart extends StatelessWidget {
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
-                    interval: 1,
+                    interval: 3,
                     getTitlesWidget: (value, meta) {
                       final index = value.toInt();
                       if (index < 0 || index >= timeLabels.length) {
@@ -62,8 +64,8 @@ class DetailedTrendChart extends StatelessWidget {
                 leftTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
-                    reservedSize: 40, // ← 기본값보다 크게 설정
-                    interval: ((maxY - minY) / 4).clamp(1, 999),
+                    reservedSize: 25,
+                    interval: ((maxY - minY) / 2).clamp(1, 999),
                     getTitlesWidget: (value, meta) => SideTitleWidget(
                       meta: meta,
                       space: 4,
@@ -74,8 +76,10 @@ class DetailedTrendChart extends StatelessWidget {
                     ),
                   ),
                 ),
-                topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                topTitles:
+                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles:
+                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
               ),
               lineTouchData: LineTouchData(
                 enabled: true,
@@ -104,7 +108,6 @@ class DetailedTrendChart extends StatelessWidget {
                   dotData: FlDotData(show: false),
                 ),
               ],
-
             ),
           ),
         ),

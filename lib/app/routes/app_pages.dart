@@ -46,10 +46,10 @@ class AppPages {
       page: () => const ActivityView(),
       binding: ActivityBinding(),
     ),
-    GetPage(
-      name: _Paths.BET_DETAIL,
-      page: () => const BetDetailView(),
-      binding: BetDetailBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.BET_DETAIL,
+    //   page: () => const BetDetailView(),
+    //   binding: BetDetailBinding(),
+    // ),
   ];
 }

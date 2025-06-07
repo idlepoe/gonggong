@@ -29,7 +29,7 @@ class BetCardStatsController extends GetxController {
         totalDown: data['totalDownAmount'] ?? 0,
       );
 
-      statsMap[docId] = stats;
+      statsMap.update(docId, (_) => stats, ifAbsent: () => stats); // ✅ 변화 감지 확실
     });
   }
 

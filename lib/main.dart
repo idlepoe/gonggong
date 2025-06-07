@@ -22,13 +22,14 @@ import 'firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await initializeNotification();
+  if (!kIsWeb) {
+    await initializeNotification();
+  }
   await initializeDateLocale();
   final themeController = Get.put(ThemeController());
   Get.put(ProfileController());
   Get.put(BetCardStatsController());
   await themeController.loadTheme();
-
   runApp(
     FlutterWebFrame(
       builder: (context) => GetMaterialApp(
