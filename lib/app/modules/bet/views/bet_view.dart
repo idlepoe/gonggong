@@ -65,7 +65,6 @@ class BetView extends GetView<BetController> {
                     header: _buildHeader(
                       title: '서울시 주요지천 수온 측정 자료',
                       onInfoPressed: () async {
-                        logger.i(await FirebaseMessaging.instance.getToken());
                         showWaterTempInfoDialog(context);
                       },
                     ),
@@ -83,7 +82,6 @@ class BetView extends GetView<BetController> {
                     header: _buildHeader(
                       title: '서울시 실시간 자치구별 미세먼지 현황',
                       onInfoPressed: () async {
-                        logger.i(await FirebaseMessaging.instance.getToken());
                         showDustLevelInfoDialog(context);
                       },
                     ),

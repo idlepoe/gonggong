@@ -57,7 +57,7 @@ class SplashController extends GetxController {
       });
     }
     FirebaseAuth.instance.currentUser!.updateDisplayName(nickname);
-    if (!kIsWeb) {
+    if (!GetPlatform.isWeb && !GetPlatform.isWindows) {
       FirebaseMessaging.instance.subscribeToTopic('user_$uid');
     }
 

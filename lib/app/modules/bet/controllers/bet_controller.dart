@@ -151,11 +151,6 @@ class BetController extends GetxController {
 
       await ApiService().placeBetWithModel(bet);
 
-      // ✅ topic 구독
-      final topic =
-          "${bet.site_id}_${bet.type_id}_${_resolveBetKey(bet.createdAt)}";
-      await FirebaseMessaging.instance.subscribeToTopic(topic);
-
       showAppSnackbar("베팅 완료", "${bet.amount.toInt()}포인트 베팅 성공!");
       // 필요시 포인트 또는 베팅 목록 갱신
     } catch (e) {

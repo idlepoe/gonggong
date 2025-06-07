@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:flutter/material.dart';
+import 'package:tray_manager/tray_manager.dart';
+import 'package:window_manager/window_manager.dart';
 
 class HomeController extends GetxController {
   final pageController = PageController();
@@ -25,12 +27,14 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    registerOnlineStatus().then(
-      (value) {
-        listenToOnlineUsers();
-        requestPushPermissionIfNeeded();
-      },
-    );
+    if (!GetPlatform.isWindows) {
+      registerOnlineStatus().then(
+        (value) {
+          listenToOnlineUsers();
+          requestPushPermissionIfNeeded();
+        },
+      );
+    }
   }
 
   @override

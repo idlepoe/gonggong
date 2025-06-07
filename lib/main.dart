@@ -9,6 +9,8 @@ import 'package:flutter_web_frame/flutter_web_frame.dart';
 
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:tray_manager/tray_manager.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'app/data/constants/app_translations.dart';
 import 'app/data/constants/theme.dart';
@@ -22,7 +24,7 @@ import 'firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  if (!kIsWeb) {
+  if (GetPlatform.isAndroid) {
     await initializeNotification();
   }
   await initializeDateLocale();
@@ -30,6 +32,25 @@ Future<void> main() async {
   Get.put(ProfileController());
   Get.put(BetCardStatsController());
   await themeController.loadTheme();
+
+  if (GetPlatform.isWindows) {
+    await windowManager.ensureInitialized();
+
+    // 초기 사이즈 지정
+    var initialSize = Size(475, 812);
+    await windowManager.setSize(initialSize);
+    await windowManager.setMinimumSize(initialSize);
+    await windowManager.setMaximumSize(initialSize);
+    await windowManager.setResizable(false);
+    await windowManager.setTitle("공공놀이터");
+    await windowManager.setIcon('assets/icon/icon.ico');
+
+    // 창 가운데로 이동
+    await windowManager.center();
+
+    await windowManager.setPreventClose(true);
+  }
+
   runApp(
     FlutterWebFrame(
       builder: (context) => GetMaterialApp(

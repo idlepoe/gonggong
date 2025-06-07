@@ -6,7 +6,7 @@ class AppThemes {
   static ThemeData light() {
     return ThemeData(
       scaffoldBackgroundColor: AppColors.backgroundColor,
-      fontFamily: 'MapoGoldenPier',
+      // fontFamily: 'MapoGoldenPier',
       colorScheme: ColorScheme.light(
         primary: AppColors.accentGreen,
         // 상승 강조색
@@ -24,7 +24,7 @@ class AppThemes {
           color: AppColors.textPrimary,
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          fontFamily: 'MapoGoldenPier',
+          // fontFamily: 'MapoGoldenPier',
         ),
         iconTheme: const IconThemeData(color: Colors.black87),
       ),
@@ -76,7 +76,7 @@ class AppThemes {
     return ThemeData(
       brightness: Brightness.dark,
       scaffoldBackgroundColor: AppColors.darkBackgroundColor,
-      fontFamily: 'MapoGoldenPier',
+      // fontFamily: 'MapoGoldenPier',
       colorScheme: ColorScheme.dark(
         primary: AppColors.accentGreen,
         secondary: AppColors.accentRed,
@@ -92,7 +92,7 @@ class AppThemes {
           color: AppColors.darkTextPrimary,
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          fontFamily: 'MapoGoldenPier',
+          // fontFamily: 'MapoGoldenPier',
         ),
         iconTheme: const IconThemeData(color: Colors.white70),
       ),
