@@ -42,7 +42,7 @@ Future<void> main() async {
     await windowManager.setMinimumSize(initialSize);
     await windowManager.setMaximumSize(initialSize);
     await windowManager.setResizable(false);
-    await windowManager.setTitle("공공놀이터");
+    await windowManager.setTitle("공공데이터퀴즈");
     await windowManager.setIcon('assets/icon/icon.ico');
 
     // 창 가운데로 이동
@@ -53,25 +53,26 @@ Future<void> main() async {
 
   runApp(
     FlutterWebFrame(
-      builder: (context) => GetMaterialApp(
-        title: '공공놀이터',
-        translations: AppTranslations(),
-        locale: Get.deviceLocale,
-        fallbackLocale: const Locale('en', 'US'),
-        scrollBehavior: const MaterialScrollBehavior().copyWith(
-          dragDevices: {
-            PointerDeviceKind.touch,
-            PointerDeviceKind.mouse,
-            PointerDeviceKind.trackpad,
-          },
-        ),
-        initialRoute: AppPages.INITIAL,
-        getPages: AppPages.routes,
-        debugShowCheckedModeBanner: false,
-        theme: AppThemes.light(),
-        darkTheme: AppThemes.dark(),
-        themeMode: ThemeMode.system, // 또는 light / dark 강제 설정
-      ),
+      builder:
+          (context) => GetMaterialApp(
+            title: '공공데이터퀴즈',
+            translations: AppTranslations(),
+            locale: Get.deviceLocale,
+            fallbackLocale: const Locale('en', 'US'),
+            scrollBehavior: const MaterialScrollBehavior().copyWith(
+              dragDevices: {
+                PointerDeviceKind.touch,
+                PointerDeviceKind.mouse,
+                PointerDeviceKind.trackpad,
+              },
+            ),
+            initialRoute: AppPages.INITIAL,
+            getPages: AppPages.routes,
+            debugShowCheckedModeBanner: false,
+            theme: AppThemes.light(),
+            darkTheme: AppThemes.dark(),
+            themeMode: ThemeMode.system, // 또는 light / dark 강제 설정
+          ),
       maximumSize: Size(475.0, 812.0),
       enabled: kIsWeb,
       backgroundColor: Colors.grey.shade300,

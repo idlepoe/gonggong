@@ -42,11 +42,15 @@ class ActivityCard extends StatelessWidget {
                       radius: 20,
                     ),
                     const SizedBox(height: 4),
-                    Text(activity.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 10, fontWeight: FontWeight.bold)),
+                    Text(
+                      activity.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -60,8 +64,11 @@ class ActivityCard extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       _formatRelativeTime(activity.createdAt),
-                      style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
-                    )
+                      style: TextStyle(
+                        color: Colors.grey.shade500,
+                        fontSize: 12,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -87,29 +94,39 @@ class ActivityCard extends StatelessWidget {
 
         switch (tag) {
           case 'point':
-            spans.add(TextSpan(
-              text: content,
-              style: const TextStyle(
-                  color: Colors.orange, fontWeight: FontWeight.bold),
-            ));
+            spans.add(
+              TextSpan(
+                text: content,
+                style: const TextStyle(
+                  color: Colors.orange,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
             break;
           case 'strong':
-            spans.add(TextSpan(
-              text: content,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ));
+            spans.add(
+              TextSpan(
+                text: content,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            );
             break;
           case 'dir_up':
-            spans.add(TextSpan(
-              text: content,
-              style: const TextStyle(color: Colors.green),
-            ));
+            spans.add(
+              TextSpan(
+                text: content,
+                style: const TextStyle(color: Colors.green),
+              ),
+            );
             break;
           case 'dir_down':
-            spans.add(TextSpan(
-              text: content,
-              style: const TextStyle(color: Colors.red),
-            ));
+            spans.add(
+              TextSpan(
+                text: content,
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
             break;
           default:
             spans.add(TextSpan(text: content));
@@ -132,8 +149,9 @@ class ActivityCard extends StatelessWidget {
 
       final title = extractTitleFromMessage(activity.message);
 
-      final artwork = gachaController.artworks
-          .firstWhereOrNull((art) => art.nameKr == title);
+      final artwork = gachaController.artworks.firstWhereOrNull(
+        (art) => art.nameKr == title,
+      );
 
       if (artwork != null && profile != null) {
         showArtworkBottomSheet(
@@ -143,9 +161,9 @@ class ActivityCard extends StatelessWidget {
           profile.points,
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("작품 정보를 찾을 수 없습니다.")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("작품 정보를 찾을 수 없습니다.")));
       }
     }
   }

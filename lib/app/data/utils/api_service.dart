@@ -13,8 +13,8 @@ class ApiService {
     String result = "";
     try {
       Reference reference = FirebaseStorage.instance.ref().child(
-            "uploads/${DateTime.now().millisecondsSinceEpoch.toString()}_${xFile.name}",
-          );
+        "uploads/${DateTime.now().millisecondsSinceEpoch.toString()}_${xFile.name}",
+      );
       await reference.putData(await xFile.readAsBytes());
       result = await reference.getDownloadURL();
       logger.d(result);
@@ -57,9 +57,7 @@ class ApiService {
 
   Future<dynamic> purchaseRandomArtwork() async {
     try {
-      final res = await dio.post(
-        ApiConstants.purchaseRandomArtwork,
-      );
+      final res = await dio.post(ApiConstants.purchaseRandomArtwork);
       return res.data;
     } catch (e) {
       logger.e("❌ purchaseRandomArtwork error: $e");

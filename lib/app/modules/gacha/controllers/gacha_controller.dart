@@ -30,10 +30,7 @@ class GachaController extends GetxController {
   }
 
   Future<void> fetchInitialData() async {
-    await Future.wait([
-      loadArtworksFromLocalOrServer(),
-      fetchOwnedIds(),
-    ]);
+    await Future.wait([loadArtworksFromLocalOrServer(), fetchOwnedIds()]);
   }
 
   final showUnowned = false.obs;
@@ -67,16 +64,19 @@ class GachaController extends GetxController {
       final snapshot =
           await FirebaseFirestore.instance.collection('artworks').get();
 
-      final newList = snapshot.docs.map((doc) {
-        final data = doc.data();
-        return Artwork.fromJson({...data, 'id': doc.id});
-      }).toList();
+      final newList =
+          snapshot.docs.map((doc) {
+            final data = doc.data();
+            return Artwork.fromJson({...data, 'id': doc.id});
+          }).toList();
 
       artworks.assignAll(newList);
 
       // ✅ SharedPreferences에 저장
       await prefs.setString(
-          _cacheKey, json.encode(newList.map((e) => e.toJson()).toList()));
+        _cacheKey,
+        json.encode(newList.map((e) => e.toJson()).toList()),
+      );
       await prefs.setString(_cacheTimeKey, now.toIso8601String());
     } catch (e) {
       print('🔥 Error loading artworks: $e');
@@ -91,11 +91,12 @@ class GachaController extends GetxController {
       final uid = _auth.currentUser?.uid;
       if (uid == null) return;
 
-      final snapshot = await _firestore
-          .collection('users')
-          .doc(uid)
-          .collection('artworks') // ✅ 서브컬렉션 경로
-          .get();
+      final snapshot =
+          await _firestore
+              .collection('users')
+              .doc(uid)
+              .collection('artworks') // ✅ 서브컬렉션 경로
+              .get();
 
       final ids = snapshot.docs.map((doc) => doc.id).toList();
       ownedIds.addAll(ids);
@@ -124,7 +125,10 @@ class GachaController extends GetxController {
       if (newArtwork != null) {
         logger.w(newArtwork);
         ownedIds.add(newArtwork["artworkId"]);
-        showAppSnackbar('🎁 가챠 결과', '${newArtwork["artwork"]["prdct_nm_korean"]} 획득!');
+        showAppSnackbar(
+          '🎁 가챠 결과',
+          '${newArtwork["artwork"]["prdct_nm_korean"]} 획득!',
+        );
       }
     } catch (e) {
       logger.e(e);

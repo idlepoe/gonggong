@@ -17,22 +17,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e0f3d131-9244-4cc6-a4a2-44627efbea21" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.firebase/hosting.YnVpbGRcd2Vi.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.firebase/hosting.YnVpbGRcd2Vi.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/icon/icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/icon/icon.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/functions/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/constants/api_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/constants/api_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/constants/theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/constants/theme.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/data/controllers/profile_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/controllers/profile_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/controllers/bet_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/controllers/bet_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/widgets/bet_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/bet_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/widgets/bet_card_summary.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/bet_card_summary.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet/widgets/interval_with_timer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet/widgets/interval_with_timer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet_detail/views/bet_detail_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet_detail/views/bet_detail_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet_detail/widgets/BetActionButtons.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet_detail/widgets/BetActionButtons.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/bet_detail/widgets/BetStatsSection.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/bet_detail/widgets/BetStatsSection.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app/modules/gacha/views/gacha_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/gacha/views/gacha_view.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/data/utils/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/data/utils/api_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/activity/views/activity_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/activity/views/activity_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/activity/widgets/activity_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/activity/widgets/activity_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/gacha/controllers/gacha_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/gacha/controllers/gacha_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app/modules/home/views/home_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app/modules/home/views/home_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/etc/delete_account.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/etc/delete_account.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/etc/policy.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/etc/policy.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/etc/report.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/etc/report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +75,7 @@
     "ignore.virus.scanning.warn.message": "true",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Workspace/eunhasu2",
+    "last_opened_file_path": "C:/Workspace/gonggong/assets/icon",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>

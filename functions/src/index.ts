@@ -485,6 +485,18 @@ export async function settleBets({
                 points: admin.firestore.FieldValue.increment(reward),
             });
         }
+
+        // 활동 로그 추가
+        await db.collection('activity').add({
+            type: 'bet_result',
+            uid: bet.uid,
+            name: bet.userName,
+            avatarUrl: bet.avatarUrl,
+            site_id: bet.site_id,
+            type_id: bet.type_id,
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            message: `🌀 ${bet.question}\n${won ? '✅ 성공' : '❌ 실패'} | <point>${bet.amount}P</point> → 보상: <point>${won ? reward : 0}P</point>`,
+        });
     }
 
     await batch.commit();
@@ -647,7 +659,7 @@ export const purchaseRandomArtwork = onRequest({
             name: userName,
             avatarUrl,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            message: `🖼️ <strong>${result.artwork.prdct_nm_korean}</strong> 작품을 소장했어요`,
+            message: `🖼️ <strong>${result.artwork.prdct_nm_korean}</strong> 작품을 ${POINT_COST} 포인트로 소장했어요`,
         });
 
         res.status(200).json(result);
@@ -748,7 +760,7 @@ export const purchaseArtwork = onRequest(async (req, res) => {
             name: userName,
             avatarUrl,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            message: `🖼️ <strong>${artworkData.prdct_nm_korean}</strong> 작품을 소장했어요`,
+            message: `🖼️ <strong>${artworkData.prdct_nm_korean}</strong> 작품을 ${price} 포인트로 소장했어요`,
         });
 
         res.status(200).json({

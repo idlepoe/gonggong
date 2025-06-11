@@ -24,9 +24,7 @@ class ActivityView extends StatelessWidget {
           itemCount: controller.activities.length,
           itemBuilder: (context, index) {
             Activity row = controller.activities[index];
-            return ActivityCard(
-              activity: row,
-            );
+            return ActivityCard(activity: row);
           },
         );
       }),

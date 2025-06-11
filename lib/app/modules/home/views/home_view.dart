@@ -23,8 +23,12 @@ class HomeView extends GetView<HomeController>
         appBar: AppBar(
           title:
               GetPlatform.isDesktop
-                  ? Text('공공놀이터')
-                  : Obx(() => Text('온라인 접속자 수: ${controller.onlineCount}명')),
+                  ? Text('공공데이터퀴즈')
+                  : Obx(
+                    () => Wrap(
+                      children: [Text('온라인 접속자 수: ${controller.onlineCount}명')],
+                    ),
+                  ),
           actions: [UserProfileBadge()],
         ),
         body: PageView(
