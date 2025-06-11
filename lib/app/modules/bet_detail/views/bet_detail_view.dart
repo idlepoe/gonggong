@@ -13,7 +13,7 @@ class BetDetailView extends GetView<BetDetailController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("베팅 상세"),
+        title: Text("퀴즈 상세"),
       ),
       body: CustomScrollView(
         slivers: [

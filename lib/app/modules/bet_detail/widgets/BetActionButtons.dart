@@ -96,7 +96,7 @@ class _BetActionButtonsState extends State<BetActionButtons> {
                 keyboardType: TextInputType.number,
                 enabled: !isLoading,
                 decoration: const InputDecoration(
-                  labelText: "베팅 포인트 입력",
+                  labelText: "퀴즈 포인트 입력",
                   border: OutlineInputBorder(),
                   suffixText: "P",
                 ),

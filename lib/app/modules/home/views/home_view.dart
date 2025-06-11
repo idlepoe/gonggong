@@ -21,21 +21,16 @@ class HomeView extends GetView<HomeController>
     return Obx(() {
       return Scaffold(
         appBar: AppBar(
-          title: GetPlatform.isDesktop
-              ? Text('공공놀이터')
-              : Obx(() => Text('온라인 접속자 수: ${controller.onlineCount}명')),
-          actions: [
-            UserProfileBadge(),
-          ],
+          title:
+              GetPlatform.isDesktop
+                  ? Text('공공놀이터')
+                  : Obx(() => Text('온라인 접속자 수: ${controller.onlineCount}명')),
+          actions: [UserProfileBadge()],
         ),
         body: PageView(
           controller: controller.pageController,
           physics: const BouncingScrollPhysics(),
-          children: [
-            BetView(),
-            const GachaView(),
-            ActivityView(),
-          ],
+          children: [BetView(), const GachaView(), ActivityView()],
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: controller.currentIndex.value,
@@ -45,11 +40,17 @@ class HomeView extends GetView<HomeController>
           unselectedFontSize: 12,
           items: const [
             BottomNavigationBarItem(
-                icon: Text('📈', style: TextStyle(fontSize: 20)), label: '예측'),
+              icon: Text('📈', style: TextStyle(fontSize: 20)),
+              label: '퀴즈',
+            ),
             BottomNavigationBarItem(
-                icon: Text('🖼️', style: TextStyle(fontSize: 20)), label: '작품'),
+              icon: Text('🖼️', style: TextStyle(fontSize: 20)),
+              label: '작품',
+            ),
             BottomNavigationBarItem(
-                icon: Text('🧾', style: TextStyle(fontSize: 20)), label: '활동'),
+              icon: Text('🧾', style: TextStyle(fontSize: 20)),
+              label: '활동',
+            ),
           ],
         ),
       );
@@ -62,13 +63,15 @@ class HomeView extends GetView<HomeController>
       trayManager.addListener(this); // 트레이 리스너 등록
       await trayManager.setToolTip('gonggong');
       await trayManager.setIcon('assets/icon/icon.ico');
-      await trayManager.setContextMenu(Menu(
-        items: [
-          MenuItem(key: 'show', label: '창 열기'),
-          MenuItem.separator(),
-          MenuItem(key: 'exit', label: '종료'),
-        ],
-      ));
+      await trayManager.setContextMenu(
+        Menu(
+          items: [
+            MenuItem(key: 'show', label: '창 열기'),
+            MenuItem.separator(),
+            MenuItem(key: 'exit', label: '종료'),
+          ],
+        ),
+      );
     }
   }
 

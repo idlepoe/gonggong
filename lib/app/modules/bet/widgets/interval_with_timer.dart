@@ -63,7 +63,7 @@ class _IntervalWithTimerState extends State<IntervalWithTimer> {
             size: 16, color: isClosed ? Colors.red : Colors.grey.shade600),
         const SizedBox(width: 4),
         Text(
-          isClosed ? "베팅 마감" : _formatDuration(_remaining),
+          isClosed ? "퀴즈 마감" : _formatDuration(_remaining),
           style: TextStyle(
             color: isClosed ? Colors.red : Colors.grey.shade600,
             fontWeight: isClosed ? FontWeight.bold : FontWeight.normal,

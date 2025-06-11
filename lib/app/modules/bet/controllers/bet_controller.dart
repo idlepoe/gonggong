@@ -145,16 +145,16 @@ class BetController extends GetxController {
       final currentPoints = profile?.points ?? 0;
 
       if (currentPoints < bet.amount) {
-        showAppSnackbar("베팅 실패", "포인트가 부족합니다. 현재 보유: $currentPoints P");
+        showAppSnackbar("퀴즈 실패", "포인트가 부족합니다. 현재 보유: $currentPoints P");
         return;
       }
 
       await ApiService().placeBetWithModel(bet);
 
-      showAppSnackbar("베팅 완료", "${bet.amount.toInt()}포인트 베팅 성공!");
+      showAppSnackbar("퀴즈 완료", "${bet.amount.toInt()}포인트 퀴즈 성공!");
       // 필요시 포인트 또는 베팅 목록 갱신
     } catch (e) {
-      showAppSnackbar("베팅 실패", e.toString());
+      showAppSnackbar("퀴즈 실패", e.toString());
     } finally {
       Future.delayed(const Duration(seconds: 5), () {
         isLoading.value = false;
@@ -177,16 +177,16 @@ class BetController extends GetxController {
       final refund = (bet.amount * 0.85).floor();
       final directionLabel = bet.direction == 'up' ? '오를 것' : '내릴 것';
 
-      logger.i("🪙 ${bet.amount}P 베팅 취소 → ${refund}P 환불");
+      logger.i("🪙 ${bet.amount}P 퀴즈 취소 → ${refund}P 환불");
 
       showAppSnackbar(
-        "베팅 취소 완료",
+        "퀴즈 취소 완료",
         "$directionLabel 에 걸었던 ${bet.amount.toStringAsFixed(0)}P 중\n수수료 제외 ${refund}P가 환불되었습니다.",
       );
     } catch (e) {
-      logger.e("❌ 베팅 취소 실패: $e");
+      logger.e("❌ 퀴즈 취소 실패: $e");
       showAppSnackbar(
-        "베팅 취소 실패",
+        "퀴즈 취소 실패",
         "다시 시도해주세요.",
       );
     } finally {

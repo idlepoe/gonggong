@@ -300,7 +300,7 @@ export const placeBet = onRequest({
                 userName = userData?.name ?? "";
                 avatarUrl = userData?.avatarUrl ?? "";
 
-                if (!betSnap.exists) throw new Error("❌ 베팅 정보 없음");
+                if (!betSnap.exists) throw new Error("❌ 퀴즈 정보 없음");
 
                 bet = betSnap.data()!;
                 refundAmount = Math.floor(bet.amount * 0.85);
@@ -324,7 +324,7 @@ export const placeBet = onRequest({
                     points: currentPoints + refundAmount,
                 });
 
-                // 🔹 베팅 삭제
+                // 🔹 퀴즈 삭제
                 tx.delete(betRef);
 
                 // 🔹 measurements.updatedAt 갱신
@@ -345,10 +345,10 @@ export const placeBet = onRequest({
                 name: userName,
                 avatarUrl,
                 createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                message: `🌀 ${bet.question}\n❎ <point>${bet.amount}P</point> 베팅 취소 → <point>${refundAmount}P</point> 환불`,
+                message: `🌀 ${bet.question}\n❎ <point>${bet.amount}P</point> 퀴즈 취소 → <point>${refundAmount}P</point> 환불`,
             });
 
-            res.status(200).send("🪙 베팅 취소 완료 (15% 수수료 제외)");
+            res.status(200).send("🪙 퀴즈 취소 완료 (15% 수수료 제외)");
             return;
         }
 
@@ -358,7 +358,7 @@ export const placeBet = onRequest({
             typeof odds !== "number" ||
             !["up", "down"].includes(direction)
         ) {
-            res.status(400).send("❌ 베팅 파라미터 오류");
+            res.status(400).send("❌ 퀴즈 파라미터 오류");
             return;
         }
 
@@ -391,7 +391,7 @@ export const placeBet = onRequest({
                 points: currentPoints - amount,
             });
 
-            // 🔹 베팅 저장
+            // 🔹 퀴즈 저장
             tx.set(betRef, {
                 uid,
                 site_id,
@@ -435,10 +435,10 @@ export const placeBet = onRequest({
             site_id,
             type_id,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            message: `🌀 ${question}\n🎯 <point>${amount}P</point> 베팅 → <${direction === 'up' ? 'dir_up' : 'dir_down'}>${direction === 'up' ? '상승' : '하락'}</${direction === 'up' ? 'dir_up' : 'dir_down'}> 예측`,
+            message: `🌀 ${question}\n🎯 <point>${amount}P</point> 퀴즈 → <${direction === 'up' ? 'dir_up' : 'dir_down'}>${direction === 'up' ? '상승' : '하락'}</${direction === 'up' ? 'dir_up' : 'dir_down'}> 퀴즈`,
         });
 
-        res.status(200).send("✅ 베팅 성공");
+        res.status(200).send("✅ 퀴즈 성공");
     } catch (error: any) {
         console.error("❌ placeBet 실패:", error);
         res.status(500).send(`❌ ${error.message}`);
@@ -469,12 +469,6 @@ export async function settleBets({
         const won = bet.direction === (isUp ? 'up' : 'down');
         const reward = Math.floor(bet.amount * bet.odds);
 
-        if (won) {
-            batch.update(userRef, {
-                points: admin.firestore.FieldValue.increment(reward),
-            });
-        }
-
         // 기록용 백업
         const historyRef = db.collection('bets_history').doc();
         batch.set(historyRef, {
@@ -483,7 +477,7 @@ export async function settleBets({
             settledAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 
-        // 기존 베팅 제거
+        // 기존 퀴즈 제거
         batch.delete(doc.ref);
 
         if (won) {
@@ -494,7 +488,7 @@ export async function settleBets({
     }
 
     await batch.commit();
-    console.log(`✅ ${site_id}_${type_id} 베팅 정산 완료 (${isUp ? '상승' : '하락'})`);
+    console.log(`✅ ${site_id}_${type_id} 퀴즈 정산 완료 (${isUp ? '상승' : '하락'})`);
 
     // ✅ summary 값만 초기화
     const summaryRef = db
@@ -809,7 +803,7 @@ async function sendBetPushManually() {
             }
 
             summaryByUser[uid].docIds.push(doc.id);
-            summaryByUser[uid].totalAmount += data.amount ?? 0; // ✅ 총 베팅액 누적
+            summaryByUser[uid].totalAmount += data.amount ?? 0; // ✅ 총 퀴즈액 누적
 
             if (data.result === "win") {
                 summaryByUser[uid].winCount += 1;
@@ -822,13 +816,13 @@ async function sendBetPushManually() {
         for (const [uid, summary] of Object.entries(summaryByUser)) {
             const {winCount, loseCount, totalReward, totalAmount, docIds} = summary;
 
-            const summaryLine = `📊 결과 요약\n✅ ${winCount}승  ❌ ${loseCount}패\n💰 획득: ${totalReward}P\n🎯 총 베팅액: ${totalAmount}P`;
+            const summaryLine = `📊 결과 요약\n✅ ${winCount}승  ❌ ${loseCount}패\n💰 획득: ${totalReward}P\n🎯 총 퀴즈액: ${totalAmount}P`;
 
             try {
                 await admin.messaging().send({
                     topic: `user_${uid}`,
                     notification: {
-                        title: "베팅 결과 요약이 도착했어요!",
+                        title: "퀴즈 결과 요약이 도착했어요!",
                         body: summaryLine,
                     },
                     android: {

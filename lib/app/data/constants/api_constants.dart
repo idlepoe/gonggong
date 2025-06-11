@@ -1,7 +1,7 @@
 class ApiConstants {
   static const baseUrl = "https://asia-northeast3-gong-nol.cloudfunctions.net";
 
-  // ✅ 베팅 관련
+  // ✅ 퀴즈 관련
   static const String placeBet = "/placeBet";
   static const String cancelBet = "/cancelBet";
   static const String purchaseRandomArtwork = "/purchaseRandomArtwork";
@@ -11,7 +11,7 @@ class ApiConstants {
     '강남의배당왕🐯',
     '강동의승부사🐲',
     '강북의올인러🃏',
-    '강서의예측러🔮',
+    '강서의퀴즈러🔮',
     '관악의물고기🎣',
     '광진의포인트헌터🦊',
     '구로의주사위🎲',
@@ -30,7 +30,7 @@ class ApiConstants {
     '영등포의배팅야수🐻',
     '용산의타짜🦈',
     '은평의박수꾼👏',
-    '종로의예측신🎯',
+    '종로의퀴즈신🎯',
     '중구의꾼🎩',
     '중랑의승부욕🐺',
   ];

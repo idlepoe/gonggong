@@ -98,7 +98,7 @@ class ProfileController extends GetxController {
     });
   }
 
-  // 💡 포인트 기반 베팅 한도 계산
+  // 💡 포인트 기반 퀴즈 한도 계산
   double getMaxBet(double points) {
     final points = userPoints.toDouble();
     if (points >= 2000) return 1000;

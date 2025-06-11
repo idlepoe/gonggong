@@ -62,7 +62,7 @@ class _BetCardState extends State<BetCard> {
     final profileController = Get.find<ProfileController>();
     final currentPoints = profileController.userPoints;
     if (currentPoints == 0) {
-      showAppSnackbar("베팅 실패", "포인트가 부족합니다. 현재 보유: $currentPoints P");
+      showAppSnackbar("퀴즈 실패", "포인트가 부족합니다. 현재 보유: $currentPoints P");
       return;
     }
 

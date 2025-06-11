@@ -36,7 +36,7 @@ class AppThemes {
         secondarySelectedColor: AppColors.accentRed.withOpacity(0.8),
       ),
       cardColor: AppColors.cardBackground,
-      cardTheme: const CardTheme(
+      cardTheme: const CardThemeData(
         margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         elevation: 1,
         shape: RoundedRectangleBorder(
@@ -104,7 +104,7 @@ class AppThemes {
         secondarySelectedColor: AppColors.accentRed.withOpacity(0.8),
       ),
       cardColor: AppColors.darkCardBackground,
-      cardTheme: const CardTheme(
+      cardTheme: const CardThemeData(
         margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         elevation: 1,
         shape: RoundedRectangleBorder(
