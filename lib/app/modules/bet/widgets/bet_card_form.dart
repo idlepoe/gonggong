@@ -78,7 +78,8 @@ class BetCardForm extends StatelessWidget {
             value: amount.clamp(1.0, maxBetAmount),
             min: 1,
             max: maxBetAmount,
-            divisions: maxBetAmount > 1 ? maxBetAmount.toInt() - 1 : null, // ✅ 분기 처리
+            divisions:
+                maxBetAmount > 1 ? maxBetAmount.toInt() - 1 : null, // ✅ 분기 처리
             label: "${amount.toStringAsFixed(0)}P",
             onChanged: onAmountChanged,
           ),
@@ -86,7 +87,8 @@ class BetCardForm extends StatelessWidget {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: color,
-              foregroundColor: bettingUp ? Colors.green.shade800 : Colors.red.shade800,
+              foregroundColor:
+                  bettingUp ? Colors.green.shade800 : Colors.red.shade800,
               minimumSize: const Size.fromHeight(48),
             ),
             onPressed: isLoading ? null : onSubmit,

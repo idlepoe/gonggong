@@ -38,7 +38,7 @@ class BetView extends GetView<BetController> {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: "배당률을 계산 중입니다...\n",
+                            text: "선택률을 계산 중입니다...\n",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
